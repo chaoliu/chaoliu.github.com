@@ -36,3 +36,11 @@ wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - 
 **插件**
 >plugins=(git)
 
+
+####3 实用功能
+
+定义hash快速进入目录：
+
+在~/.zshrc中定义：
+
+>hash -d blog="/home/work/blog"

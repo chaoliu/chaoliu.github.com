@@ -1,0 +1,156 @@
+---
+layout: post
+title: "Strcpy ,strncpy ,strlcpy的用法"
+date: 2015-02-27 13:14:43 +0800
+comments: true
+categories: 
+---
+
+好多人已经知道利用strncpy替代strcpy来防止缓冲区越界。但是如果还要考虑运行效率的话，也许strlcpy是一个更好的方式。
+
+<!-- more -->
+### 1. strcpy
+
+strcpy 是依据 /0 作为结束判断的，如果 to 的空间不够，则会引起 buffer overflow。strcpy 常规的实现代码如下（来自 OpenBSD 3.9）：
+
+``` c
+char * strcpy(char *to, const char *from)
+{
+       char *save = to;
+       for (; (*to = *from) != '/0'; ++from, ++to);
+       return(save);
+}
+
+```
+但通常，我们的 from 都来源于用户的输入，很可能是非常大的一个字符串，因此 strcpy 不够安全。
+
+### 2. strncpy
+
+在 ANSIC 中，strcpy 的安全版本是 strncpy
+
+``` c
+
+char *strncpy(char *s1, const char *s2, size_t n);
+
+```
+但 strncpy 其行为是很诡异的（不符合我们的通常习惯）。标准规定 n 并不是 sizeof(s1)，而是要复制的 char 的个数。一个最常见的问题，就是 strncpy 并不帮你保证 /0 结束。
+
+```
+char buf[8];
+strncpy( buf, "abcdefgh", 8 );
+```
+
+看这个程序，buf 将会被 “abcdefgh” 填满，但却没有 /0 结束符了。
+
+另外，如果 s2 的内容比较少，而 n 又比较大的话，strncpy 将会把之间的空间都用 /0 填充。这又出现了一个效率上的问题，如下：
+
+```
+char buf[80];
+strncpy( buf, "abcdefgh", 79 );
+
+```
+上面的 strncpy 会填写 79 个 char，而不仅仅是 “abcdefgh” 本身。
+
+strncpy 的标准用法为：（手工写上 /0）
+
+```
+strncpy(path, src, sizeof(path) - 1);
+
+path[sizeof(path) - 1] = '/0';
+
+len = strlen(path);
+
+```
+### 3. strlcpy
+
+```
+// Copy src to string dst of size siz. At most siz-1 characters
+
+// will be copied. Always NUL terminates (unless siz == 0).
+
+// Returns strlen(src); if retval >= siz, truncation occurred.
+
+```
+size_t   strlcpy(char *dst, const char *src, size_t siz);
+而使用 strlcpy，就不需要我们去手动负责 /0 了，仅需要把 sizeof(dst) 告之 strlcpy 即可：
+
+```
+strlcpy(path, src, sizeof(path));
+
+len = strlen(path);
+
+if ( len >= sizeof(path) )
+
+       printf("src is truncated.");
+
+```
+
+并且 strlcpy 传回的是 strlen(str)，因此我们也很方便的可以判断数据是否被截断。
+
+strlcpy 并不属于 ANSIC，至今也还不是标准。 strlcpy 来源于 OpenBSD 2.4，之后很多 unix-like 系统的 libc 中都加入了 strlcpy 函数，我个人在 FreeBSD、Linux 里面都找到了 strlcpy。（Linux使用的是 glibc， glibc里面有 strlcpy，则所有的 Linux 版本也都应该有 strlcpy） 但 Windows 下是没有 strlcpy 的，对应的是strncpy和memset函数
+
+### 4. PHP
+
+
+``` C php-src/main/strlcpy.c
+
+/*
+ * Copy src to string dst of size siz.  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz == 0).
+ * Returns strlen(src); if retval >= siz, truncation occurred.
+ */
+PHPAPI size_t php_strlcpy(dst, src, siz)
+  char *dst;
+  const char *src;
+  size_t siz;
+{
+  register char *d = dst;
+  register const char *s = src;
+  register size_t n = siz;
+
+  /* Copy as many bytes as will fit */
+  if (n != 0 && --n != 0) {
+      do {
+          if ((*d++ = *s++) == 0)
+              break;
+      } while (--n != 0);
+  }
+
+  /* Not enough room in dst, add NUL and traverse rest of src */
+  if (n == 0) {
+      if (siz != 0)
+          *d = '\0';      /* NUL-terminate dst */
+      while (*s++)
+          ;
+  }
+
+  return(s - src - 1);   /* count does not include NUL */
+}
+
+```
+
+
+``` C php-src/main/php.h
+
+/*
+ * This is a fast version of strlcpy which should be used, if you
+ * know the size of the destination buffer and if you know
+ * the length of the source string.
+ *
+ * size is the allocated number of bytes of dst
+ * src_size is the number of bytes excluding the NUL of src
+ */
+
+#define PHP_STRLCPY(dst, src, size, src_size)    \
+ {                                           \
+     size_t php_str_len;                     \
+                                             \
+     if (src_size >= size)                    \
+         php_str_len = size - 1;             \
+     else                                    \
+         php_str_len = src_size;             \
+     memcpy(dst, src, php_str_len);          \
+     dst[php_str_len] = '\0';                \
+ }
+
+ ```

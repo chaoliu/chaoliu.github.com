@@ -1,0 +1,38 @@
+---
+layout: post
+title: "oh-my-zsh"
+date: 2015-02-27 15:29:40 +0800
+comments: true
+categories: 效率提升
+---
+
+> 本文记录了mac os下zsh的配置与使用, 感觉zsh 相对 bash而言，易用性好一些
+
+<!-- more -->
+
+#####http://ohmyz.sh/
+
+#####https://github.com/robbyrussell/oh-my-zsh
+
+####1 安装
+
+via curl
+
+curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+
+via wget
+
+wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+
+####2 配置
+
+安装好后，重新打开终端或新开一个Tab即可看到效果，当然你也可以通过编辑zshrc配置zsh，常用的配置项有主题以及插件：
+
+>vim ~/.zshrc
+
+**主题**
+>ZSH_THEME="gallois"
+
+**插件**
+>plugins=(git)
+

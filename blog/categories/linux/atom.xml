@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Linux | A true master is an eternal student.]]></title>
+  <link href="http://chaoliu.github.io/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://chaoliu.github.io/"/>
+  <updated>2015-03-03T19:31:57+08:00</updated>
+  <id>http://chaoliu.github.io/</id>
+  <author>
+    <name><![CDATA[ChaoLiu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Strcoll]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/02/strcoll/"/>
+    <updated>2015-03-02T12:35:03+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/02/strcoll</id>
+    <content type="html"><![CDATA[<h3>strcoll</h3>
+
+<h4>函数简介</h4>
+
+<p>说明：
+默认情况下(LC_COLLATE为&#8221;POSIX&#8221;或&#8221;C&#8221;)和strcmp一样根据ASCII比较字符串大小。
+对于设置了LC_COLLATE语言环境的情况下，则根据LC_COLLATE设置的语言排序方式进行比较。例如：汉字，根据拼音进行比较。</p>
+
+<h4>函数实例</h4>
+
+<p>请参考strcmp的实例.用法和函数声明都一样.</p>
+
+<h3>php</h3>
+
+<p>php 在实现alphasort时用到了此函数，代码如下</p>
+
+<pre><code class="C">PHPAPI int php_alphasort(const struct dirent **a, const struct dirent **b)
+{
+    return strcoll((*a)-&gt;d_name,(*b)-&gt;d_name);
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[dirent.h]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/02/dirent-dot-h/"/>
+    <updated>2015-03-02T12:12:36+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/02/dirent-dot-h</id>
+    <content type="html"><![CDATA[<h3>alphasort</h3>
+
+<p>alphasort（依字母顺序排序目录结构）
+相关函数 <code>scandir，qsort</code>
+表头文件 <code>#include&lt;dirent.h></code>
+定义函数
+<code>C
+int alphasort(const struct dirent **a,const struct dirent **b);
+</code>
+函数说明 alphasort()为scandir()最后调用qsort()函数时传给qsort()作w为判断的函数，详细说明请参考scandir()及qsort()。
+返回值 参考qsort()。</p>
+
+<!-- more -->
+
+
+<p>示例</p>
+
+<pre><code class="C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;dirent.h&gt;
+int main()
+{
+    struct dirent **namelist;
+    int i,total;
+
+    total = scandir("/", &amp;namelist , 0, alphasort);
+    if(total &lt;0){
+        perror("scandir");
+    } else {
+        for(i=0;i&lt;total;i++)
+            printf("%s\n", namelist[i]-&gt;d_name);
+        printf("total = %d\n",total);
+    }
+}
+</code></pre>
+
+<h3>dirent 结构体</h3>
+
+<pre><code>struct dirent
+{
+    long d_ino; /* inode number 索引节点号 */
+    off_t d_off; /* offset to this dirent 在目录文件中的偏移 */
+    unsigned short d_reclen; /* length of this d_name 文件名长 */
+    unsigned char d_type; /* the type of d_name 文件类型 */
+    char d_name [NAME_MAX+1]; /* file name (null-terminated) 文件名，最长256字符 */
+}
+</code></pre>
+
+<h3>php</h3>
+
+<p>在php中为了保持兼容性，当<code>scandir</code>和<code>alphasort</code>不存在时，将会使用自定义的版本，具体可以参考php-src/main/php_scandir.c</p>
+]]></content>
+  </entry>
+  
+</feed>

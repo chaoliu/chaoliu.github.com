@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Strcpy ,strncpy ,strlcpy的用法 - A true master is an eternal student.</title>
+  <meta name="author" content="ChaoLiu">
+
+  
+  <meta name="description" content="好多人已经知道利用strncpy替代strcpy来防止缓冲区越界。但是如果还要考虑运行效率的话，也许strlcpy是一个更好的方式。 1. strcpy strcpy 是依据 /0 作为结束判断的，如果 to 的空间不够，则会引起 buffer overflow。strcpy 常规的实现代码如下（ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/02/27/strcpy/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A true master is an eternal student.</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="chaoliu.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Strcpy ,strncpy ,strlcpy的用法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T13:14:43+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:14 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>好多人已经知道利用strncpy替代strcpy来防止缓冲区越界。但是如果还要考虑运行效率的话，也许strlcpy是一个更好的方式。</p>
+
+<!-- more -->
+
+
+<h3>1. strcpy</h3>
+
+<p>strcpy 是依据 /0 作为结束判断的，如果 to 的空间不够，则会引起 buffer overflow。strcpy 常规的实现代码如下（来自 OpenBSD 3.9）：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="nf">strcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">to</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">from</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>       <span class="kt">char</span> <span class="o">*</span><span class="n">save</span> <span class="o">=</span> <span class="n">to</span><span class="p">;</span>
+</span><span class='line'>       <span class="k">for</span> <span class="p">(;</span> <span class="p">(</span><span class="o">*</span><span class="n">to</span> <span class="o">=</span> <span class="o">*</span><span class="n">from</span><span class="p">)</span> <span class="o">!=</span> <span class="err">&#39;</span><span class="o">/</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">;</span> <span class="o">++</span><span class="n">from</span><span class="p">,</span> <span class="o">++</span><span class="n">to</span><span class="p">);</span>
+</span><span class='line'>       <span class="k">return</span><span class="p">(</span><span class="n">save</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但通常，我们的 from 都来源于用户的输入，很可能是非常大的一个字符串，因此 strcpy 不够安全。</p>
+
+<h3>2. strncpy</h3>
+
+<p>在 ANSIC 中，strcpy 的安全版本是 strncpy</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="nf">strncpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但 strncpy 其行为是很诡异的（不符合我们的通常习惯）。标准规定 n 并不是 sizeof(s1)，而是要复制的 char 的个数。一个最常见的问题，就是 strncpy 并不帮你保证 /0 结束。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+</span><span class='line'><span class="n">strncpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="s">&quot;abcdefgh&quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看这个程序，buf 将会被 “abcdefgh” 填满，但却没有 /0 结束符了。</p>
+
+<p>另外，如果 s2 的内容比较少，而 n 又比较大的话，strncpy 将会把之间的空间都用 /0 填充。这又出现了一个效率上的问题，如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">80</span><span class="p">];</span>
+</span><span class='line'><span class="n">strncpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="s">&quot;abcdefgh&quot;</span><span class="p">,</span> <span class="mi">79</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的 strncpy 会填写 79 个 char，而不仅仅是 “abcdefgh” 本身。</p>
+
+<p>strncpy 的标准用法为：（手工写上 /0）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">strncpy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">path</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="err">&#39;</span><span class="o">/</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. strlcpy</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// Copy src to string dst of size siz. At most siz-1 characters</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// will be copied. Always NUL terminates (unless siz == 0).</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Returns strlen(src); if retval &gt;= siz, truncation occurred.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>size_t   strlcpy(char <em>dst, const char </em>src, size_t siz);
+而使用 strlcpy，就不需要我们去手动负责 /0 了，仅需要把 sizeof(dst) 告之 strlcpy 即可：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">strlcpy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>       <span class="n">printf</span><span class="p">(</span><span class="s">&quot;src is truncated.&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>并且 strlcpy 传回的是 strlen(str)，因此我们也很方便的可以判断数据是否被截断。</p>
+
+<p>strlcpy 并不属于 ANSIC，至今也还不是标准。 strlcpy 来源于 OpenBSD 2.4，之后很多 unix-like 系统的 libc 中都加入了 strlcpy 函数，我个人在 FreeBSD、Linux 里面都找到了 strlcpy。（Linux使用的是 glibc， glibc里面有 strlcpy，则所有的 Linux 版本也都应该有 strlcpy） 但 Windows 下是没有 strlcpy 的，对应的是strncpy和memset函数</p>
+
+<h3>4. PHP</h3>
+
+<figure class='code'><figcaption><span>php-src/main/strlcpy.c</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm"> * Copy src to string dst of size siz.  At most siz-1 characters</span>
+</span><span class='line'><span class="cm"> * will be copied.  Always NUL terminates (unless siz == 0).</span>
+</span><span class='line'><span class="cm"> * Returns strlen(src); if retval &gt;= siz, truncation occurred.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="n">PHPAPI</span> <span class="kt">size_t</span> <span class="n">php_strlcpy</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">siz</span><span class="p">)</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="o">*</span><span class="n">dst</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">size_t</span> <span class="n">siz</span><span class="p">;</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">register</span> <span class="kt">char</span> <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="n">dst</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">register</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">register</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">siz</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* Copy as many bytes as will fit */</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">d</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s</span><span class="o">++</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>              <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* Not enough room in dst, add NUL and traverse rest of src */</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">siz</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>          <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>      <span class="cm">/* NUL-terminate dst */</span>
+</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">src</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>   <span class="cm">/* count does not include NUL */</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<pre><code class="C php-src/main/php.h">
+/*
+ * This is a fast version of strlcpy which should be used, if you
+ * know the size of the destination buffer and if you know
+ * the length of the source string.
+ *
+ * size is the allocated number of bytes of dst
+ * src_size is the number of bytes excluding the NUL of src
+ */
+
+#define PHP_STRLCPY(dst, src, size, src_size)    \
+ {                                           \
+     size_t php_str_len;                     \
+                                             \
+     if (src_size &gt;= size)                    \
+         php_str_len = size - 1;             \
+     else                                    \
+         php_str_len = src_size;             \
+     memcpy(dst, src, php_str_len);          \
+     dst[php_str_len] = '\0';                \
+ }
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ChaoLiu</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T13:14:43+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:14 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/02/27/strcpy/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/02/27/strcpy/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/" title="Next Post: Octopress个人博客搭建">Octopress个人博客搭建 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">安装Sublime Text 2插件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - ChaoLiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoliu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/02/27/strcpy/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2015/02/27/strcpy/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

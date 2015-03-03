@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SocketServer模块 - A true master is an eternal student.</title>
+  <meta name="author" content="ChaoLiu">
+
+  
+  <meta name="description" content="SocketServer是标准库中一个高级别的模块，用于简化网络客户与服务器的实现。模块中，已经实现了一些可供使用的类。 在Python3中，本模块为socketserver模块。在Python 2中，本模块为SocketServer模块。所以在用import导入时，要分情况导入，否则会报错。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A true master is an eternal student.</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="chaoliu.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">SocketServer模块</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T18:10:42+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:10 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>SocketServer是标准库中一个高级别的模块，用于简化网络客户与服务器的实现。模块中，已经实现了一些可供使用的类。</p>
+
+<!-- more -->
+
+
+<p>在Python3中，本模块为socketserver模块。在Python 2中，本模块为SocketServer模块。所以在用import导入时，要分情况导入，否则会报错。导入的代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>    <span class="kn">import</span> <span class="nn">socketserver</span>      <span class="c">#Python 3</span>
+</span><span class='line'><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span class='line'>    <span class="kn">import</span> <span class="nn">SocketServer</span>      <span class="c">#Python 2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>SocketSerror模块包括许多可以简化TCP、UDP、UNIX域套接字  服务器实现的类。</p>
+
+<h2>一、处理程序</h2>
+
+<p>要使用本模块，必须定义一个继承于基类BaseRequestHandler的处理程序类。BaseRequestHandler类的实例h可以实现以下方法：</p>
+
+<p>1、h.handle()  调用该方法执行实际的请求操作。调用该函数可以不带任何参数，但是几个实例变量包含有用的值。h.request包含请求，h.client_address包含客户端地址，h.server包含调用处理程序的实例。对于TCP之类的数据流服务，h.request属性是套接字对象。对于数据报服务，它是包含收到数据的字节字符串。</p>
+
+<p>2、h.setup()   该方法在handle()之前调用。默认情况下，它不执行任何操作。如果希望服务器实现更多连接设置（如建立SSL连接），可以在这里实现。</p>
+
+<p>3、h.finish()   调用本方法可以在执行完handle()之后执行清除操作。默认情况下，它不执行任何操作。如果setup()和handle()方法都不生成异常，则无需调用该方法。</p>
+
+<p>如果知道应用程序只能操纵面向数据流的连接（如TCP），那么应从StreamRequestHandler继承，而不是BaseRequestHandler。StreamRequestHandler类设置了两个属性，h.wfile是将数据写入客户端的类文件对象，h.rfile是从客户端读取数据的类文件对象。</p>
+
+<p>如果要编写针对数据包操作的处理程序并将响应持续返回发送方，那么它应当从DatagramRequestHandler继承。它提供的类接口与StramRequestHandler相同。</p>
+
+<h2>二、服务器</h2>
+
+<p>要使用处理程序，必须将其插入到服务器对象。定义了四个基本的服务器类。</p>
+
+<p>1、 TCPServer(address,handler)   支持使用IPv4的TCP协议的服务器，address是一个（host,port）元组。Handler是BaseRequestHandler或StreamRequestHandler类的子类的实例。</p>
+
+<p>2、 UDPServer(address,handler)   支持使用IPv4的UDP协议的服务器，address和handler与TCPServer中类似。</p>
+
+<p>3、UnixStreamServer(address,handler)   使用UNIX域套接字实现面向数据流协议的服务器，继承自TCPServer。</p>
+
+<p>4、 UnixDatagramServer(address,handler)  使用UNIX域套接字实现数据报协议的服务器，继承自UDPServer。</p>
+
+<p>所有四个服务器类的实例都有以下方法和变量：</p>
+
+<p>1、s.socket   用于传入请求的套接字对象。</p>
+
+<p>2、s.sever_address  监听服务器的地址。如元组（&#8221;127.0.0.1&#8221;,80）</p>
+
+<p>3、s.RequestHandlerClass   传递给服务器构造函数并由用户提供的请求处理程序类。</p>
+
+<p>4、s.serve_forever()  处理无限的请求</p>
+
+<p>5、s.shutdown()   停止serve_forever()循环</p>
+
+<p>6、s.fileno()   返回服务器套接字的整数文件描述符。该方法可以有效地通过轮询操作（如select()函数）使用服务器实例。</p>
+
+<h2>三、定义自定义服务器</h2>
+
+<p>服务器往往需要特殊的配置来处理不同的网络地址族、超时期、并发和其他功能，可以通过继承上面四个基本服务器类来自行定义。</p>
+
+<p>可以通过混合类获得更多服务器功能，这也是通过进程或线程分支添加并发行的方法。为了实现并发性，定义了以下类：</p>
+
+<p>（1）ForkingMixIn         将UNIX进程分支添加到服务器的混合方法，使用该方法可以让服务器服务多个客户。</p>
+
+<p>（2）ThreadingMixIn    修改服务器的混合类，可以使用线程服务多个客户端。</p>
+
+<p>要向服务器添加这些功能，可以使用多重继承，其中首先列出混了类。</p>
+
+<p>由于并发服务器很常用，为了定义它，SocketServer预定义了以下服务器类：</p>
+
+<p>（1）ForkingUDPServer(address,handler)</p>
+
+<p>（2）ForkingTCPServer(address,handler)</p>
+
+<p>（3）ThreadingUDPServer(address,handler)</p>
+
+<p>（4）ThreadingTCPServer(address,handler)</p>
+
+<p>上面有点乱，现总结以下：</p>
+
+<p>SocketServer模块中的类主要有以下几个：</p>
+
+<p>1、BaseServer    包含服务器的核心功能与混合类（mix-in）的钩子功能。这个类主要用于派生，不要直接生成这个类的类对象，可以考虑使用TCPServer和UDPServer类。</p>
+
+<p>2、TCPServer    基本的网络同步TCP服务器</p>
+
+<p>3、UDPServer    基本的网络同步UDP服务器</p>
+
+<p>4、ForkingMixIn   实现了核心的进程化功能，用于与服务器类进行混合(mix-in)，以提供一些异步特性。不要直接生成这个类的对象。</p>
+
+<p>5、ThreadingMixIn   实现了核心的线程化功能，用于与服务器类进行混合(mix-in)，以提供一些异步特性。不要直接生成这个类的对象。</p>
+
+<p>6、ForkingTCPServer     ForkingMixIn与TCPServer的组合</p>
+
+<p>7、ForkingUDPServer    ForkingMixIn与UDPServer的组合</p>
+
+<p>8、BaseRequestHandler</p>
+
+<p>9、StreamRequestHandler    TCP请求处理类的一个实现</p>
+
+<p>10、DataStreamRequestHandler   UDP请求处理类的一个实现</p>
+
+<p>现在繁杂的事务都已经封装到类中了，直接使用类即可。</p>
+
+<p>使用SocketServer模块编写的TCP服务器端代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#! /usr/bin/env python</span>
+</span><span class='line'><span class="c">#coding=utf-8</span>
+</span><span class='line'><span class="sd">&quot;&quot;&quot;使用SocketServer来实现简单的TCP服务器&quot;&quot;&quot;</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">SocketServer</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TCPServer</span><span class="p">,</span><span class="n">StreamRequestHandler</span>  <span class="k">as</span> <span class="n">SRH</span><span class="p">)</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">ctime</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyRequestHandler</span><span class="p">(</span><span class="n">SRH</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;connected from &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">client_address</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;[</span><span class="si">%s</span><span class="s">] </span><span class="si">%s</span><span class="s">&quot;</span>  <span class="o">%</span><span class="p">(</span><span class="n">ctime</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">rfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">tcpSer</span><span class="o">=</span><span class="n">TCPServer</span><span class="p">((</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="mi">10001</span><span class="p">),</span><span class="n">MyRequestHandler</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;waiting for connection&quot;</span>
+</span><span class='line'><span class="n">tcpSer</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相应的TCP客户端代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#! /usr/bin/env python</span>
+</span><span class='line'><span class="c">#coding=utf-8</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span class='line'><span class="n">BUFSIZE</span><span class="o">=</span><span class="mi">1024</span>
+</span><span class='line'><span class="c">#每次都要创建新的连接</span>
+</span><span class='line'><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">tcpClient</span><span class="o">=</span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="mi">10001</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">data</span><span class="o">=</span><span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;&gt;&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">break</span>
+</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="se">\r\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="n">data</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">data1</span><span class="o">=</span><span class="n">tcpClient</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">BUFSIZE</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="n">data1</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">break</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">data1</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>本文转载自: <a href="http://my.oschina.net/duhaizhang/blog/68639">http://my.oschina.net/duhaizhang/blog/68639</a></p></blockquote>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ChaoLiu</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T18:10:42+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:10 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/27/fastcgi-specification/" title="Previous Post: FastCGI 规范">&laquo; FastCGI 规范</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/03/02/dirent-dot-h/" title="Next Post: dirent.h">dirent.h &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">安装Sublime Text 2插件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - ChaoLiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoliu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

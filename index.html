@@ -9,7 +9,13 @@
   <meta name="author" content="ChaoLiu">
 
   
-  <meta name="description" content="本文记录了mac os下zsh的配置与使用, 感觉zsh 相对 bash而言，易用性好一些 ">
+  <meta name="description" content="required： 10.10.2 xcode installed $ ./buildconf 1
+2
+3
+4
+5
+buildconf: checking installation...
+buildconf: autoconf not found. You need autoconf &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +67,454 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T15:53:27+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:53 pm</span></time>
+        
+           | <a href="/blog/2015/03/02/php7kai-fa-huan-jing/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>required： 10.10.2  xcode installed</h3>
+
+<blockquote><p>$ ./buildconf</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>buildconf: checking installation...
+</span><span class='line'>buildconf: autoconf not found.
+</span><span class='line'>           You need autoconf version 2.59 or newer installed
+</span><span class='line'>           to build PHP from Git.
+</span><span class='line'>make: *** [buildmk.stamp] Error 1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ brew install autoconf                                                                         *[master]</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>==&gt; Downloading https://homebrew.bintray.com/bottles/autoconf-2.69.yosemite.bottle.1.tar.gz
+</span><span class='line'>######################################################################## 100.0%
+</span><span class='line'>==&gt; Pouring autoconf-2.69.yosemite.bottle.1.tar.gz
+</span><span class='line'>/usr/local/Cellar/autoconf/2.69: 70 files, 3.1M</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ ./buildconf</p>
+
+<p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>checking for bison... bison -y
+</span><span class='line'>checking for bison version... invalid
+</span><span class='line'>configure: WARNING: This bison version is not supported for regeneration of the Zend/PHP parsers (found: 2.3, min: 204, excluded: ).
+</span><span class='line'>checking for re2c... re2c
+</span><span class='line'>checking for re2c version... 0.13.7.5 (ok)
+</span><span class='line'>configure: error: bison is required to build PHP/Zend when building a GIT checkout!</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ wget <a href="http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz">http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz</a></p>
+
+<p>$ ./configure</p>
+
+<p>$ make &amp;&amp; make install</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>before
+</span><span class='line'>$ bison -V                                                                             
+</span><span class='line'>bison (GNU Bison) 2.3
+</span><span class='line'>Written by Robert Corbett and Richard Stallman.
+</span><span class='line'>
+</span><span class='line'>Copyright (C) 2006 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>after
+</span><span class='line'>$ bison -V                                                                                      *[master] 
+</span><span class='line'>bison (GNU Bison) 3.0.4
+</span><span class='line'>Written by Robert Corbett and Richard Stallman.
+</span><span class='line'>
+</span><span class='line'>Copyright (C) 2015 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Thank you for using PHP.
+</span><span class='line'>
+</span><span class='line'>config.status: creating php7.spec
+</span><span class='line'>config.status: creating main/build-defs.h
+</span><span class='line'>config.status: creating scripts/phpize
+</span><span class='line'>config.status: creating scripts/man1/phpize.1
+</span><span class='line'>config.status: creating scripts/php-config
+</span><span class='line'>config.status: creating scripts/man1/php-config.1
+</span><span class='line'>config.status: creating sapi/cli/php.1
+</span><span class='line'>config.status: creating sapi/cgi/php-cgi.1
+</span><span class='line'>config.status: creating main/php_config.h
+</span><span class='line'>config.status: executing default commands
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$make</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Build complete.
+</span><span class='line'>Don't forget to run 'make test'.
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T13:02:52+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>1:02 pm</span></time>
+        
+           | <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/02/yu-bian-yi-zhi-ling/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>当注释掉大块代码时，使用<code>#if 0</code>比使用
+<code>/**/</code>
+要好，因为用
+<code>/**/</code>
+做大段的注释要防止被注释掉的代码中有嵌套的
+<code>/**/</code>,这会导致注释掉的代码区域不是你想要的范围， 当被注释掉的代码很大时容易出现这种情况，特别是过一段时间后又修改该处代码时更是如此。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#if 1
+</span><span class='line'>###执行
+</span><span class='line'>#endif
+</span><span class='line'>
+</span><span class='line'>#if 0
+</span><span class='line'>###不执行
+</span><span class='line'>#endif 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编译阶段的注释语句</p>
+
+<h3>php</h3>
+
+<figure class='code'><figcaption><span>php-src/zend/zend_string.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="k">static</span> <span class="n">zend_always_inline</span> <span class="n">zend_string</span> <span class="o">*</span><span class="nf">zend_string_alloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">persistent</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">zend_string</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">zend_string</span> <span class="o">*</span><span class="p">)</span><span class="n">pemalloc</span><span class="p">(</span><span class="n">ZEND_MM_ALIGNED_SIZE</span><span class="p">(</span><span class="n">_STR_HEADER_SIZE</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">persistent</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">GC_REFCOUNT</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#if 1</span>
+</span><span class='line'>    <span class="cm">/* optimized single assignment */</span>
+</span><span class='line'>    <span class="n">GC_TYPE_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span> <span class="o">|</span> <span class="p">((</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
+</span><span class='line'><span class="cp">#else</span>
+</span><span class='line'>    <span class="n">GC_TYPE</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">GC_FLAGS</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">GC_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/02/strcoll/">Strcoll</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T12:35:03+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>12:35 pm</span></time>
+        
+           | <a href="/blog/2015/03/02/strcoll/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/02/strcoll/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>strcoll</h3>
+
+<h4>函数简介</h4>
+
+<p>说明：
+默认情况下(LC_COLLATE为&#8221;POSIX&#8221;或&#8221;C&#8221;)和strcmp一样根据ASCII比较字符串大小。
+对于设置了LC_COLLATE语言环境的情况下，则根据LC_COLLATE设置的语言排序方式进行比较。例如：汉字，根据拼音进行比较。</p>
+
+<h4>函数实例</h4>
+
+<p>请参考strcmp的实例.用法和函数声明都一样.</p>
+
+<h3>php</h3>
+
+<p>php 在实现alphasort时用到了此函数，代码如下</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="n">PHPAPI</span> <span class="kt">int</span> <span class="nf">php_alphasort</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">b</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">strcoll</span><span class="p">((</span><span class="o">*</span><span class="n">a</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,(</span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T12:12:36+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>12:12 pm</span></time>
+        
+           | <a href="/blog/2015/03/02/dirent-dot-h/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/02/dirent-dot-h/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>alphasort</h3>
+
+<p>alphasort（依字母顺序排序目录结构）
+相关函数 <code>scandir，qsort</code>
+表头文件 <code>#include&lt;dirent.h></code>
+定义函数</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="kt">int</span> <span class="nf">alphasort</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">b</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>函数说明 alphasort()为scandir()最后调用qsort()函数时传给qsort()作w为判断的函数，详细说明请参考scandir()及qsort()。
+返回值 参考qsort()。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/02/dirent-dot-h/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/27/socketservermo-kuai/">SocketServer模块</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T18:10:42+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:10 pm</span></time>
+        
+           | <a href="/blog/2015/02/27/socketservermo-kuai/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SocketServer是标准库中一个高级别的模块，用于简化网络客户与服务器的实现。模块中，已经实现了一些可供使用的类。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/27/socketservermo-kuai/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/27/fastcgi-specification/">FastCGI 规范</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-27T16:25:56+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:25 pm</span></time>
+        
+           | <a href="/blog/2015/02/27/fastcgi-specification/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div style="text-align:center;font-size:.8em">
+Mark R. Brown
+Open Market, Inc.</br>
+文档版本：1.08
+1996 年 4 月 29 日
+Copyright © 1996 Open Market, Inc. 245 First Street, Cambridge, MA 02142 U.S.A.
+Tel: 617-621-9500 Fax: 617-621-1703 URL: http://www.openmarket.com/
+</br>
+$Id: fcgi-spec.html,v 1.4 2002/02/25 00:42:59 robs Exp $
+</div>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/27/fastcgi-specification/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -228,44 +682,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/27/strcpy/">Strcpy ,strncpy ,strlcpy的用法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-02-27T13:14:43+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:14 pm</span></time>
-        
-           | <a href="/blog/2015/02/27/strcpy/#disqus_thread"
-             data-disqus-identifier="http://chaoliu.github.io/blog/2015/02/27/strcpy/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>好多人已经知道利用strncpy替代strcpy来防止缓冲区越界。但是如果还要考虑运行效率的话，也许strlcpy是一个更好的方式。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/02/27/strcpy/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -278,23 +697,23 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/02/27/oh-my-zsh/">Oh-my-zsh</a>
+        <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/02/27/ssh-config/">Ssh Config</a>
+        <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/02/27/dot-gitconfig/">.gitconfig</a>
+        <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/">Octopress个人博客搭建</a>
+        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2015/02/27/strcpy/">Strcpy ,strncpy ,strlcpy的用法</a>
+        <a href="/blog/2015/02/27/socketservermo-kuai/">SocketServer模块</a>
       </li>
     
   </ul>

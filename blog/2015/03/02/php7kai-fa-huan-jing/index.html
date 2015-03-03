@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Php7开发环境 - A true master is an eternal student.</title>
+  <meta name="author" content="ChaoLiu">
+
+  
+  <meta name="description" content="required： 10.10.2 xcode installed $ ./buildconf 1
+2
+3
+4
+5
+buildconf: checking installation...
+buildconf: autoconf not found. You need autoconf &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A true master is an eternal student.</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="chaoliu.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Php7开发环境</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T15:53:27+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:53 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>required： 10.10.2  xcode installed</h3>
+
+<blockquote><p>$ ./buildconf</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>buildconf: checking installation...
+</span><span class='line'>buildconf: autoconf not found.
+</span><span class='line'>           You need autoconf version 2.59 or newer installed
+</span><span class='line'>           to build PHP from Git.
+</span><span class='line'>make: *** [buildmk.stamp] Error 1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ brew install autoconf                                                                         *[master]</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>==&gt; Downloading https://homebrew.bintray.com/bottles/autoconf-2.69.yosemite.bottle.1.tar.gz
+</span><span class='line'>######################################################################## 100.0%
+</span><span class='line'>==&gt; Pouring autoconf-2.69.yosemite.bottle.1.tar.gz
+</span><span class='line'>/usr/local/Cellar/autoconf/2.69: 70 files, 3.1M</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ ./buildconf</p>
+
+<p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>checking for bison... bison -y
+</span><span class='line'>checking for bison version... invalid
+</span><span class='line'>configure: WARNING: This bison version is not supported for regeneration of the Zend/PHP parsers (found: 2.3, min: 204, excluded: ).
+</span><span class='line'>checking for re2c... re2c
+</span><span class='line'>checking for re2c version... 0.13.7.5 (ok)
+</span><span class='line'>configure: error: bison is required to build PHP/Zend when building a GIT checkout!</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ wget <a href="http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz">http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz</a></p>
+
+<p>$ ./configure</p>
+
+<p>$ make &amp;&amp; make install</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>before
+</span><span class='line'>$ bison -V                                                                             
+</span><span class='line'>bison (GNU Bison) 2.3
+</span><span class='line'>Written by Robert Corbett and Richard Stallman.
+</span><span class='line'>
+</span><span class='line'>Copyright (C) 2006 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>after
+</span><span class='line'>$ bison -V                                                                                      *[master] 
+</span><span class='line'>bison (GNU Bison) 3.0.4
+</span><span class='line'>Written by Robert Corbett and Richard Stallman.
+</span><span class='line'>
+</span><span class='line'>Copyright (C) 2015 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Thank you for using PHP.
+</span><span class='line'>
+</span><span class='line'>config.status: creating php7.spec
+</span><span class='line'>config.status: creating main/build-defs.h
+</span><span class='line'>config.status: creating scripts/phpize
+</span><span class='line'>config.status: creating scripts/man1/phpize.1
+</span><span class='line'>config.status: creating scripts/php-config
+</span><span class='line'>config.status: creating scripts/man1/php-config.1
+</span><span class='line'>config.status: creating sapi/cli/php.1
+</span><span class='line'>config.status: creating sapi/cgi/php-cgi.1
+</span><span class='line'>config.status: creating main/php_config.h
+</span><span class='line'>config.status: executing default commands
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>$make</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Build complete.
+</span><span class='line'>Don't forget to run 'make test'.
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ChaoLiu</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-02T15:53:27+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:53 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/03/02/yu-bian-yi-zhi-ling/" title="Previous Post: C中#if 0 和#if 1">&laquo; C中#if 0 和#if 1</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/27/socketservermo-kuai/">SocketServer模块</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - ChaoLiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoliu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,545 +1,94 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[A true master is an eternal student.]]></title>
-  <link href="http://chaoliu.github.io/atom.xml" rel="self"/>
-  <link href="http://chaoliu.github.io/"/>
-  <updated>2015-03-02T15:59:55+08:00</updated>
-  <id>http://chaoliu.github.io/</id>
-  <author>
-    <name><![CDATA[ChaoLiu]]></name>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>FastCGI 规范 - A true master is an eternal student.</title>
+  <meta name="author" content="ChaoLiu">
+
+  
+  <meta name="description" content="Mark R. Brown
+Open Market, Inc.
+文档版本：1.08
+1996 年 4 月 29 日
+Copyright © 1996 Open Market, Inc. 245 First Street, Cambridge, MA 02142 U.S.A.
+Tel: 617- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A true master is an eternal student.</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="chaoliu.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
     
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+      <h1 class="entry-title">FastCGI 规范</h1>
+    
+    
+      <p class="meta">
+        
 
-  
-  <entry>
-    <title type="html"><![CDATA[Php7开发环境]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing/"/>
-    <updated>2015-03-02T15:53:27+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/03/02/php7kai-fa-huan-jing</id>
-    <content type="html"><![CDATA[<h3>required： 10.10.2  xcode installed</h3>
 
-<blockquote><p>$ ./buildconf</p></blockquote>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>buildconf: checking installation...
-</span><span class='line'>buildconf: autoconf not found.
-</span><span class='line'>           You need autoconf version 2.59 or newer installed
-</span><span class='line'>           to build PHP from Git.
-</span><span class='line'>make: *** [buildmk.stamp] Error 1
-</span></code></pre></td></tr></table></div></figure>
 
+<time class='entry-date' datetime='2015-02-27T16:25:56+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:25 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
 
-<blockquote><p>$ brew install autoconf                                                                         *[master]</p></blockquote>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>==&gt; Downloading https://homebrew.bintray.com/bottles/autoconf-2.69.yosemite.bottle.1.tar.gz
-</span><span class='line'>######################################################################## 100.0%
-</span><span class='line'>==&gt; Pouring autoconf-2.69.yosemite.bottle.1.tar.gz
-</span><span class='line'>/usr/local/Cellar/autoconf/2.69: 70 files, 3.1M</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ ./buildconf</p>
-
-<p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>checking for bison... bison -y
-</span><span class='line'>checking for bison version... invalid
-</span><span class='line'>configure: WARNING: This bison version is not supported for regeneration of the Zend/PHP parsers (found: 2.3, min: 204, excluded: ).
-</span><span class='line'>checking for re2c... re2c
-</span><span class='line'>checking for re2c version... 0.13.7.5 (ok)
-</span><span class='line'>configure: error: bison is required to build PHP/Zend when building a GIT checkout!</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ wget <a href="http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz">http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz</a></p>
-
-<p>$ ./configure</p>
-
-<p>$ make &amp;&amp; make install</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before
-</span><span class='line'>$ bison -V                                                                             
-</span><span class='line'>bison (GNU Bison) 2.3
-</span><span class='line'>Written by Robert Corbett and Richard Stallman.
-</span><span class='line'>
-</span><span class='line'>Copyright (C) 2006 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-</span><span class='line'>
-</span><span class='line'>after
-</span><span class='line'>$ bison -V                                                                                      *[master] 
-</span><span class='line'>bison (GNU Bison) 3.0.4
-</span><span class='line'>Written by Robert Corbett and Richard Stallman.
-</span><span class='line'>
-</span><span class='line'>Copyright (C) 2015 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Thank you for using PHP.
-</span><span class='line'>
-</span><span class='line'>config.status: creating php7.spec
-</span><span class='line'>config.status: creating main/build-defs.h
-</span><span class='line'>config.status: creating scripts/phpize
-</span><span class='line'>config.status: creating scripts/man1/phpize.1
-</span><span class='line'>config.status: creating scripts/php-config
-</span><span class='line'>config.status: creating scripts/man1/php-config.1
-</span><span class='line'>config.status: creating sapi/cli/php.1
-</span><span class='line'>config.status: creating sapi/cgi/php-cgi.1
-</span><span class='line'>config.status: creating main/php_config.h
-</span><span class='line'>config.status: executing default commands
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$make</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Build complete.
-</span><span class='line'>Don't forget to run 'make test'.
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C中#if 0 和#if 1]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/03/02/yu-bian-yi-zhi-ling/"/>
-    <updated>2015-03-02T13:02:52+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/03/02/yu-bian-yi-zhi-ling</id>
-    <content type="html"><![CDATA[<p>当注释掉大块代码时，使用<code>#if 0</code>比使用
-<code>/**/</code>
-要好，因为用
-<code>/**/</code>
-做大段的注释要防止被注释掉的代码中有嵌套的
-<code>/**/</code>,这会导致注释掉的代码区域不是你想要的范围， 当被注释掉的代码很大时容易出现这种情况，特别是过一段时间后又修改该处代码时更是如此。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#if 1
-</span><span class='line'>###执行
-</span><span class='line'>#endif
-</span><span class='line'>
-</span><span class='line'>#if 0
-</span><span class='line'>###不执行
-</span><span class='line'>#endif 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>编译阶段的注释语句</p>
-
-<h3>php</h3>
-
-<figure class='code'><figcaption><span>php-src/zend/zend_string.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="k">static</span> <span class="n">zend_always_inline</span> <span class="n">zend_string</span> <span class="o">*</span><span class="nf">zend_string_alloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">persistent</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">zend_string</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">zend_string</span> <span class="o">*</span><span class="p">)</span><span class="n">pemalloc</span><span class="p">(</span><span class="n">ZEND_MM_ALIGNED_SIZE</span><span class="p">(</span><span class="n">_STR_HEADER_SIZE</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">persistent</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">GC_REFCOUNT</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'><span class="cp">#if 1</span>
-</span><span class='line'>    <span class="cm">/* optimized single assignment */</span>
-</span><span class='line'>    <span class="n">GC_TYPE_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span> <span class="o">|</span> <span class="p">((</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
-</span><span class='line'><span class="cp">#else</span>
-</span><span class='line'>    <span class="n">GC_TYPE</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">GC_FLAGS</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">GC_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="cp">#endif</span>
-</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Strcoll]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/03/02/strcoll/"/>
-    <updated>2015-03-02T12:35:03+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/03/02/strcoll</id>
-    <content type="html"><![CDATA[<h3>strcoll</h3>
-
-<h4>函数简介</h4>
-
-<p>说明：
-默认情况下(LC_COLLATE为&#8221;POSIX&#8221;或&#8221;C&#8221;)和strcmp一样根据ASCII比较字符串大小。
-对于设置了LC_COLLATE语言环境的情况下，则根据LC_COLLATE设置的语言排序方式进行比较。例如：汉字，根据拼音进行比较。</p>
-
-<h4>函数实例</h4>
-
-<p>请参考strcmp的实例.用法和函数声明都一样.</p>
-
-<h3>php</h3>
-
-<p>php 在实现alphasort时用到了此函数，代码如下</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="n">PHPAPI</span> <span class="kt">int</span> <span class="nf">php_alphasort</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">b</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">strcoll</span><span class="p">((</span><span class="o">*</span><span class="n">a</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,(</span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[dirent.h]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/03/02/dirent-dot-h/"/>
-    <updated>2015-03-02T12:12:36+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/03/02/dirent-dot-h</id>
-    <content type="html"><![CDATA[<h3>alphasort</h3>
-
-<p>alphasort（依字母顺序排序目录结构）
-相关函数 <code>scandir，qsort</code>
-表头文件 <code>#include&lt;dirent.h></code>
-定义函数</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="kt">int</span> <span class="nf">alphasort</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span><span class="k">const</span> <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">b</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>函数说明 alphasort()为scandir()最后调用qsort()函数时传给qsort()作w为判断的函数，详细说明请参考scandir()及qsort()。
-返回值 参考qsort()。</p>
-
-<!-- more -->
-
-
-<p>示例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;dirent.h&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">namelist</span><span class="p">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">total</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">total</span> <span class="o">=</span> <span class="n">scandir</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">namelist</span> <span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alphasort</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">total</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
-</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;scandir&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">total</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">namelist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;total = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">total</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>dirent 结构体</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="k">struct</span> <span class="n">dirent</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="kt">long</span> <span class="n">d_ino</span><span class="p">;</span> <span class="cm">/* inode number 索引节点号 */</span>
-</span><span class='line'>    <span class="kt">off_t</span> <span class="n">d_off</span><span class="p">;</span> <span class="cm">/* offset to this dirent 在目录文件中的偏移 */</span>
-</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">d_reclen</span><span class="p">;</span> <span class="cm">/* length of this d_name 文件名长 */</span>
-</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">d_type</span><span class="p">;</span> <span class="cm">/* the type of d_name 文件类型 */</span>
-</span><span class='line'>    <span class="kt">char</span> <span class="n">d_name</span> <span class="p">[</span><span class="n">NAME_MAX</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span> <span class="cm">/* file name (null-terminated) 文件名，最长256字符 */</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>php</h3>
-
-<p>在php中为了保持兼容性，当<code>scandir</code>和<code>alphasort</code>不存在时，将会使用自定义的版本，具体可以参考php-src/main/php_scandir.c</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SocketServer模块]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai/"/>
-    <updated>2015-02-27T18:10:42+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/socketservermo-kuai</id>
-    <content type="html"><![CDATA[<p>SocketServer是标准库中一个高级别的模块，用于简化网络客户与服务器的实现。模块中，已经实现了一些可供使用的类。</p>
-
-<!-- more -->
-
-
-<p>在Python3中，本模块为socketserver模块。在Python 2中，本模块为SocketServer模块。所以在用import导入时，要分情况导入，否则会报错。导入的代码如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
-</span><span class='line'>    <span class="kn">import</span> <span class="nn">socketserver</span>      <span class="c">#Python 3</span>
-</span><span class='line'><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span class='line'>    <span class="kn">import</span> <span class="nn">SocketServer</span>      <span class="c">#Python 2</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>SocketSerror模块包括许多可以简化TCP、UDP、UNIX域套接字  服务器实现的类。</p>
-
-<h2>一、处理程序</h2>
-
-<p>要使用本模块，必须定义一个继承于基类BaseRequestHandler的处理程序类。BaseRequestHandler类的实例h可以实现以下方法：</p>
-
-<p>1、h.handle()  调用该方法执行实际的请求操作。调用该函数可以不带任何参数，但是几个实例变量包含有用的值。h.request包含请求，h.client_address包含客户端地址，h.server包含调用处理程序的实例。对于TCP之类的数据流服务，h.request属性是套接字对象。对于数据报服务，它是包含收到数据的字节字符串。</p>
-
-<p>2、h.setup()   该方法在handle()之前调用。默认情况下，它不执行任何操作。如果希望服务器实现更多连接设置（如建立SSL连接），可以在这里实现。</p>
-
-<p>3、h.finish()   调用本方法可以在执行完handle()之后执行清除操作。默认情况下，它不执行任何操作。如果setup()和handle()方法都不生成异常，则无需调用该方法。</p>
-
-<p>如果知道应用程序只能操纵面向数据流的连接（如TCP），那么应从StreamRequestHandler继承，而不是BaseRequestHandler。StreamRequestHandler类设置了两个属性，h.wfile是将数据写入客户端的类文件对象，h.rfile是从客户端读取数据的类文件对象。</p>
-
-<p>如果要编写针对数据包操作的处理程序并将响应持续返回发送方，那么它应当从DatagramRequestHandler继承。它提供的类接口与StramRequestHandler相同。</p>
-
-<h2>二、服务器</h2>
-
-<p>要使用处理程序，必须将其插入到服务器对象。定义了四个基本的服务器类。</p>
-
-<p>1、 TCPServer(address,handler)   支持使用IPv4的TCP协议的服务器，address是一个（host,port）元组。Handler是BaseRequestHandler或StreamRequestHandler类的子类的实例。</p>
-
-<p>2、 UDPServer(address,handler)   支持使用IPv4的UDP协议的服务器，address和handler与TCPServer中类似。</p>
-
-<p>3、UnixStreamServer(address,handler)   使用UNIX域套接字实现面向数据流协议的服务器，继承自TCPServer。</p>
-
-<p>4、 UnixDatagramServer(address,handler)  使用UNIX域套接字实现数据报协议的服务器，继承自UDPServer。</p>
-
-<p>所有四个服务器类的实例都有以下方法和变量：</p>
-
-<p>1、s.socket   用于传入请求的套接字对象。</p>
-
-<p>2、s.sever_address  监听服务器的地址。如元组（&#8221;127.0.0.1&#8221;,80）</p>
-
-<p>3、s.RequestHandlerClass   传递给服务器构造函数并由用户提供的请求处理程序类。</p>
-
-<p>4、s.serve_forever()  处理无限的请求</p>
-
-<p>5、s.shutdown()   停止serve_forever()循环</p>
-
-<p>6、s.fileno()   返回服务器套接字的整数文件描述符。该方法可以有效地通过轮询操作（如select()函数）使用服务器实例。</p>
-
-<h2>三、定义自定义服务器</h2>
-
-<p>服务器往往需要特殊的配置来处理不同的网络地址族、超时期、并发和其他功能，可以通过继承上面四个基本服务器类来自行定义。</p>
-
-<p>可以通过混合类获得更多服务器功能，这也是通过进程或线程分支添加并发行的方法。为了实现并发性，定义了以下类：</p>
-
-<p>（1）ForkingMixIn         将UNIX进程分支添加到服务器的混合方法，使用该方法可以让服务器服务多个客户。</p>
-
-<p>（2）ThreadingMixIn    修改服务器的混合类，可以使用线程服务多个客户端。</p>
-
-<p>要向服务器添加这些功能，可以使用多重继承，其中首先列出混了类。</p>
-
-<p>由于并发服务器很常用，为了定义它，SocketServer预定义了以下服务器类：</p>
-
-<p>（1）ForkingUDPServer(address,handler)</p>
-
-<p>（2）ForkingTCPServer(address,handler)</p>
-
-<p>（3）ThreadingUDPServer(address,handler)</p>
-
-<p>（4）ThreadingTCPServer(address,handler)</p>
-
-<p>上面有点乱，现总结以下：</p>
-
-<p>SocketServer模块中的类主要有以下几个：</p>
-
-<p>1、BaseServer    包含服务器的核心功能与混合类（mix-in）的钩子功能。这个类主要用于派生，不要直接生成这个类的类对象，可以考虑使用TCPServer和UDPServer类。</p>
-
-<p>2、TCPServer    基本的网络同步TCP服务器</p>
-
-<p>3、UDPServer    基本的网络同步UDP服务器</p>
-
-<p>4、ForkingMixIn   实现了核心的进程化功能，用于与服务器类进行混合(mix-in)，以提供一些异步特性。不要直接生成这个类的对象。</p>
-
-<p>5、ThreadingMixIn   实现了核心的线程化功能，用于与服务器类进行混合(mix-in)，以提供一些异步特性。不要直接生成这个类的对象。</p>
-
-<p>6、ForkingTCPServer     ForkingMixIn与TCPServer的组合</p>
-
-<p>7、ForkingUDPServer    ForkingMixIn与UDPServer的组合</p>
-
-<p>8、BaseRequestHandler</p>
-
-<p>9、StreamRequestHandler    TCP请求处理类的一个实现</p>
-
-<p>10、DataStreamRequestHandler   UDP请求处理类的一个实现</p>
-
-<p>现在繁杂的事务都已经封装到类中了，直接使用类即可。</p>
-
-<p>使用SocketServer模块编写的TCP服务器端代码：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#! /usr/bin/env python</span>
-</span><span class='line'><span class="c">#coding=utf-8</span>
-</span><span class='line'><span class="sd">&quot;&quot;&quot;使用SocketServer来实现简单的TCP服务器&quot;&quot;&quot;</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">SocketServer</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TCPServer</span><span class="p">,</span><span class="n">StreamRequestHandler</span>  <span class="k">as</span> <span class="n">SRH</span><span class="p">)</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">ctime</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MyRequestHandler</span><span class="p">(</span><span class="n">SRH</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;connected from &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">client_address</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;[</span><span class="si">%s</span><span class="s">] </span><span class="si">%s</span><span class="s">&quot;</span>  <span class="o">%</span><span class="p">(</span><span class="n">ctime</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">rfile</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">tcpSer</span><span class="o">=</span><span class="n">TCPServer</span><span class="p">((</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="mi">10001</span><span class="p">),</span><span class="n">MyRequestHandler</span><span class="p">)</span>
-</span><span class='line'><span class="k">print</span> <span class="s">&quot;waiting for connection&quot;</span>
-</span><span class='line'><span class="n">tcpSer</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>相应的TCP客户端代码：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#! /usr/bin/env python</span>
-</span><span class='line'><span class="c">#coding=utf-8</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'><span class="n">BUFSIZE</span><span class="o">=</span><span class="mi">1024</span>
-</span><span class='line'><span class="c">#每次都要创建新的连接</span>
-</span><span class='line'><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">tcpClient</span><span class="o">=</span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="mi">10001</span><span class="p">))</span>
-</span><span class='line'>    <span class="n">data</span><span class="o">=</span><span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;&gt;&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">break</span>
-</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="se">\r\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="n">data</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">data1</span><span class="o">=</span><span class="n">tcpClient</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">BUFSIZE</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="n">data1</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">break</span>
-</span><span class='line'>    <span class="k">print</span> <span class="n">data1</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span class='line'>    <span class="n">tcpClient</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>本文转载自: <a href="http://my.oschina.net/duhaizhang/blog/68639">http://my.oschina.net/duhaizhang/blog/68639</a></p></blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[FastCGI 规范]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/"/>
-    <updated>2015-02-27T16:25:56+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification</id>
-    <content type="html"><![CDATA[<div style="text-align:center;font-size:.8em">
+<div class="entry-content"><div style="text-align:center;font-size:.8em">
 Mark R. Brown
 Open Market, Inc.</br>
 文档版本：1.08
@@ -1520,425 +1069,143 @@ FCGI_STDOUT 记录发送页面：</li>
 </span><span class='line'>    <span class="p">{</span><span class="n">FCGI_END_REQUEST</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="n">FCGI_REQUEST_COMPLETE</span><span class="p">}}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Oh-my-zsh]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/oh-my-zsh/"/>
-    <updated>2015-02-27T15:29:40+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/oh-my-zsh</id>
-    <content type="html"><![CDATA[<blockquote><p>本文记录了mac os下zsh的配置与使用, 感觉zsh 相对 bash而言，易用性好一些</p></blockquote>
 
-<!-- more -->
+<span class="byline author vcard">Posted by <span class="fn">ChaoLiu</span></span>
+
+      
 
 
-<h5><a href="http://ohmyz.sh/">http://ohmyz.sh/</a></h5>
 
-<h5><a href="https://github.com/robbyrussell/oh-my-zsh">https://github.com/robbyrussell/oh-my-zsh</a></h5>
 
-<h4>1 安装</h4>
+<time class='entry-date' datetime='2015-02-27T16:25:56+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:25 pm</span></time>
+      
 
-<p>via curl</p>
-
-<p>curl -L <a href="https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh">https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh</a> | sh</p>
-
-<p>via wget</p>
-
-<p>wget <a href="https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh">https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh</a> -O - | sh</p>
-
-<h4>2 配置</h4>
-
-<p>安装好后，重新打开终端或新开一个Tab即可看到效果，当然你也可以通过编辑zshrc配置zsh，常用的配置项有主题以及插件：</p>
-
-<blockquote><p>vim ~/.zshrc</p></blockquote>
-
-<p><strong>主题</strong></p>
-
-<blockquote><p>ZSH_THEME=&ldquo;gallois&rdquo;</p></blockquote>
-
-<p><strong>插件</strong></p>
-
-<blockquote><p>plugins=(git)</p></blockquote>
-
-<h4>3 实用功能</h4>
-
-<p>定义hash快速进入目录：</p>
-
-<p>在~/.zshrc中定义：</p>
-
-<blockquote><p>hash -d blog=&ldquo;/home/work/blog&rdquo;</p></blockquote>
-]]></content>
-  </entry>
+<span class="categories">
   
-  <entry>
-    <title type="html"><![CDATA[Ssh Config]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/ssh-config/"/>
-    <updated>2015-02-27T15:17:46+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/ssh-config</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host work
-</span><span class='line'>    HostName osys11.you.com
-</span><span class='line'>    User chaoliu
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
+    <a class='category' href='/blog/categories/fastcgi/'>fastcgi</a>, <a class='category' href='/blog/categories/xie-yi-,/'>协议，</a>
   
-  <entry>
-    <title type="html"><![CDATA[.gitconfig]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/dot-gitconfig/"/>
-    <updated>2015-02-27T15:09:34+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/dot-gitconfig</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>color<span class="o">]</span>
-</span><span class='line'>        <span class="nv">ui</span> <span class="o">=</span> auto
-</span><span class='line'><span class="o">[</span>merge<span class="o">]</span>
-</span><span class='line'>        <span class="nv">tool</span> <span class="o">=</span> vimdiff
-</span><span class='line'><span class="o">[</span><span class="nb">alias</span><span class="o">]</span>
-</span><span class='line'>        <span class="nv">st</span> <span class="o">=</span> status
-</span><span class='line'>        <span class="nv">ci</span> <span class="o">=</span> commit
-</span><span class='line'>        <span class="nv">br</span> <span class="o">=</span> branch
-</span><span class='line'>        <span class="nv">co</span> <span class="o">=</span> checkout
-</span><span class='line'>        <span class="nv">df</span> <span class="o">=</span> diff
-</span></code></pre></td></tr></table></div></figure>
+</span>
 
-]]></content>
-  </entry>
+
+    </p>
+    
+      <div class="sharing">
   
-  <entry>
-    <title type="html"><![CDATA[Octopress个人博客搭建]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/"/>
-    <updated>2015-02-27T14:42:47+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/octopressge-ren-bo-ke-da-jian</id>
-    <content type="html"><![CDATA[<blockquote><p>文章内容主要记录Octopress个人博客搭建过程，部分内容参考自互联网</p></blockquote>
-
-<!-- more -->
-
-
-<h4>1.首先你可以登录Octopress主页一下主要功能</h4>
-
-<p><a href="http://octopress.org">http://octopress.org</a></p>
-
-<p>并且确保mac安装了以下工具：</p>
-
-<p>git（应该是mac自带的）</p>
-
-<p>ruby 1.9.3以上版本（可以在终端中用ruby &ndash;version查看版本是否满足）</p>
-
-<p>缺少的请单独下载安装，这里就不具体讲了</p>
-
-<h4>2.开始安装，mac上基本自带安装了git，所以直接打开终端，输入：</h4>
-
-<p>git clone git://github.com/imathis/octopress.git octopress</p>
-
-<p>之后git将会从github克隆下Octopress项目文件到本地的octopress目录，本地目录可以根据需要更改</p>
-
-<p>cd octopress</p>
-
-<p>进入Octopress项目根目录</p>
-
-<h4>3.安装相关工具</h4>
-
-<blockquote><p>sudo gem install bundler</p></blockquote>
-
-<p>这过程可能会比较长,众所周知的原因，在国内已经无法使用gem的默认源了, 为gem更换淘宝的源</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem sources -l
-</span><span class='line'>gem sources --remove https://rubygems.org/
-</span><span class='line'>gem sources -a http://ruby.taobao.org/
-</span><span class='line'>gem sources -l
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>好的，安装完成进入下一步</p>
-
-<blockquote><p>bundle install</p></blockquote>
-
-<p>开始安装具体的工具，这里没有碰到什么问题</p>
-
-<p>再接使用rake工具安装默认的主题和配置</p>
-
-<blockquote><p>rake install</p></blockquote>
-
-<h4>4.接下来开始部署博客</h4>
-
-<p>官方推荐了3种部署方式：</p>
-
-<p>1-github，部署允许自定义域名，免费，好处是多人开发更方面，坏处是文件随时可以被任何人拉下来。</p>
-
-<p>2-heroku，部署允许自定义域名，免费，并且是私有的，看样子这个比较适合我，后面的过程就用这个方法。</p>
-
-<p>3-rsync，建议用来部署有自己服务器的个人博客。</p>
-
-<p>本文主要介绍第一种方式：</p>
-
-<p>首先设置github</p>
-
-<blockquote><p>rake setup_github_pages[repo]</p></blockquote>
-
-<p>repo填写github 上的 clone URL, 例如：<a href="https://github.com/chaoliu/chaoliu.github.com.git">https://github.com/chaoliu/chaoliu.github.com.git</a></p>
-
-<p>接着可以修改_config.yml, 进行一些配置</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># ----------------------- #</span>
-</span><span class='line'><span class="c">#      Main Configs       #</span>
-</span><span class='line'><span class="c"># ----------------------- #</span>
-</span><span class='line'>
-</span><span class='line'>url: http://chaoliu.github.io
-</span><span class='line'>title: A <span class="nb">true </span>master is an eternal student.
-</span><span class='line'>subtitle:
-</span><span class='line'>author: ChaoLiu
-</span><span class='line'>simple_search: https://www.google.com/search
-</span><span class='line'>description:
-</span><span class='line'>
-</span><span class='line'>...
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>现在你可以通过</p>
-
-<blockquote><p>new_post[title]           &ndash; begin a new post in source/_posts</p></blockquote>
-
-<p>写文章了， 如果你觉得默认主题不是很好看，可以通过修改sass目录下的样式表进行样式调整</p>
-]]></content>
-  </entry>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/" >Tweet</a>
   
-  <entry>
-    <title type="html"><![CDATA[Strcpy ,strncpy ,strlcpy的用法]]></title>
-    <link href="http://chaoliu.github.io/blog/2015/02/27/strcpy/"/>
-    <updated>2015-02-27T13:14:43+08:00</updated>
-    <id>http://chaoliu.github.io/blog/2015/02/27/strcpy</id>
-    <content type="html"><![CDATA[<p>好多人已经知道利用strncpy替代strcpy来防止缓冲区越界。但是如果还要考虑运行效率的话，也许strlcpy是一个更好的方式。</p>
-
-<!-- more -->
-
-
-<h3>1. strcpy</h3>
-
-<p>strcpy 是依据 /0 作为结束判断的，如果 to 的空间不够，则会引起 buffer overflow。strcpy 常规的实现代码如下（来自 OpenBSD 3.9）：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="nf">strcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">to</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">from</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>       <span class="kt">char</span> <span class="o">*</span><span class="n">save</span> <span class="o">=</span> <span class="n">to</span><span class="p">;</span>
-</span><span class='line'>       <span class="k">for</span> <span class="p">(;</span> <span class="p">(</span><span class="o">*</span><span class="n">to</span> <span class="o">=</span> <span class="o">*</span><span class="n">from</span><span class="p">)</span> <span class="o">!=</span> <span class="err">&#39;</span><span class="o">/</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">;</span> <span class="o">++</span><span class="n">from</span><span class="p">,</span> <span class="o">++</span><span class="n">to</span><span class="p">);</span>
-</span><span class='line'>       <span class="k">return</span><span class="p">(</span><span class="n">save</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但通常，我们的 from 都来源于用户的输入，很可能是非常大的一个字符串，因此 strcpy 不够安全。</p>
-
-<h3>2. strncpy</h3>
-
-<p>在 ANSIC 中，strcpy 的安全版本是 strncpy</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="nf">strncpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但 strncpy 其行为是很诡异的（不符合我们的通常习惯）。标准规定 n 并不是 sizeof(s1)，而是要复制的 char 的个数。一个最常见的问题，就是 strncpy 并不帮你保证 /0 结束。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-</span><span class='line'><span class="n">strncpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="s">&quot;abcdefgh&quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>看这个程序，buf 将会被 “abcdefgh” 填满，但却没有 /0 结束符了。</p>
-
-<p>另外，如果 s2 的内容比较少，而 n 又比较大的话，strncpy 将会把之间的空间都用 /0 填充。这又出现了一个效率上的问题，如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">80</span><span class="p">];</span>
-</span><span class='line'><span class="n">strncpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="s">&quot;abcdefgh&quot;</span><span class="p">,</span> <span class="mi">79</span> <span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的 strncpy 会填写 79 个 char，而不仅仅是 “abcdefgh” 本身。</p>
-
-<p>strncpy 的标准用法为：（手工写上 /0）</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">strncpy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">path</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="err">&#39;</span><span class="o">/</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>3. strlcpy</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// Copy src to string dst of size siz. At most siz-1 characters</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// will be copied. Always NUL terminates (unless siz == 0).</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Returns strlen(src); if retval &gt;= siz, truncation occurred.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>size_t   strlcpy(char <em>dst, const char </em>src, size_t siz);
-而使用 strlcpy，就不需要我们去手动负责 /0 了，仅需要把 sizeof(dst) 告之 strlcpy 即可：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">strlcpy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">));</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>       <span class="n">printf</span><span class="p">(</span><span class="s">&quot;src is truncated.&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>并且 strlcpy 传回的是 strlen(str)，因此我们也很方便的可以判断数据是否被截断。</p>
-
-<p>strlcpy 并不属于 ANSIC，至今也还不是标准。 strlcpy 来源于 OpenBSD 2.4，之后很多 unix-like 系统的 libc 中都加入了 strlcpy 函数，我个人在 FreeBSD、Linux 里面都找到了 strlcpy。（Linux使用的是 glibc， glibc里面有 strlcpy，则所有的 Linux 版本也都应该有 strlcpy） 但 Windows 下是没有 strlcpy 的，对应的是strncpy和memset函数</p>
-
-<h3>4. PHP</h3>
-
-<figure class='code'><figcaption><span>php-src/main/strlcpy.c</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cm">/*</span>
-</span><span class='line'><span class="cm"> * Copy src to string dst of size siz.  At most siz-1 characters</span>
-</span><span class='line'><span class="cm"> * will be copied.  Always NUL terminates (unless siz == 0).</span>
-</span><span class='line'><span class="cm"> * Returns strlen(src); if retval &gt;= siz, truncation occurred.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="n">PHPAPI</span> <span class="kt">size_t</span> <span class="n">php_strlcpy</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">siz</span><span class="p">)</span>
-</span><span class='line'>  <span class="kt">char</span> <span class="o">*</span><span class="n">dst</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">size_t</span> <span class="n">siz</span><span class="p">;</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="k">register</span> <span class="kt">char</span> <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="n">dst</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">register</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">register</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">siz</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/* Copy as many bytes as will fit */</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">do</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">d</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s</span><span class="o">++</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>              <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/* Not enough room in dst, add NUL and traverse rest of src */</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">siz</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>          <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>      <span class="cm">/* NUL-terminate dst */</span>
-</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="o">++</span><span class="p">)</span>
-</span><span class='line'>          <span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">src</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>   <span class="cm">/* count does not include NUL */</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code class="C php-src/main/php.h">
-/*
- * This is a fast version of strlcpy which should be used, if you
- * know the size of the destination buffer and if you know
- * the length of the source string.
- *
- * size is the allocated number of bytes of dst
- * src_size is the number of bytes excluding the NUL of src
- */
-
-#define PHP_STRLCPY(dst, src, size, src_size)    \
- {                                           \
-     size_t php_str_len;                     \
-                                             \
-     if (src_size &gt;= size)                    \
-         php_str_len = size - 1;             \
-     else                                    \
-         php_str_len = src_size;             \
-     memcpy(dst, src, php_str_len);          \
-     dst[php_str_len] = '\0';                \
- }
-</code></pre>
-]]></content>
-  </entry>
   
-</feed>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/27/oh-my-zsh/" title="Previous Post: oh-my-zsh">&laquo; oh-my-zsh</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/27/socketservermo-kuai/" title="Next Post: SocketServer模块">SocketServer模块 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">C中#if 0 和#if 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/27/socketservermo-kuai/">SocketServer模块</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - ChaoLiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoliu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2015/02/27/fastcgi-specification/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,759 @@
+---
+layout: post
+title: "FastCGI 规范"
+date: 2015-02-27 16:25:56 +0800
+comments: true
+categories: 协议， fastcgi
+
+---
+
+
+<div style="text-align:center;font-size:.8em">
+Mark R. Brown
+Open Market, Inc.</br>
+文档版本：1.08
+1996 年 4 月 29 日
+Copyright © 1996 Open Market, Inc. 245 First Street, Cambridge, MA 02142 U.S.A.
+Tel: 617-621-9500 Fax: 617-621-1703 URL: http://www.openmarket.com/
+</br>
+$Id: fcgi-spec.html,v 1.4 2002/02/25 00:42:59 robs Exp $
+</div>
+
+<!-- more -->
+
+
+
+1. 介绍
+------
+
+FastCGI 是对 CGI 的开放的扩展，它为所有因特网应用提供高性能，且没有 Web
+服务器 API 的缺点（penalty）。
+
+本规范具有有限的（narrow）目标：从应用的视角规定 FastCGI 应用和支持
+FastCGI 的 Web 服务器之间的接口。Web 服务器的很多特性涉及 FastCGI，举例
+来说，应用管理设施与应用到 Web 服务器的接口无关，因此不在这儿描述。
+
+
+本规范适用于 Unix（更确切地说，适用于支持伯克利 socket 的 POSIX 系统）。
+本规范大半是简单的通信协议，与字节序无关，并且将扩展到其他系统。
+
+我们将通过与 CGI/1.1 的常规 Unix 实现的比较来介绍 FastCGI。FastCGI 被设计
+用来支持常驻（long-lived）应用进程，也就是应用服务器。那是与 CGI/1.1
+的常规 Unix 实现的主要区别，后者构造应用进程，用它响应一个请求，以及让
+它退出。
+
+FastCGI 进程的初始状态比 CGI/1.1 进程的初始状态更简洁，因为 FastCGI 进程
+开始不会连接任何东西。它没有常规的打开的文件 stdin、stdout 和 stderr，
+而且它不会通过环境变量接收大量的信息。FastCGI 进程的初始状态的关键部分
+是个正在监听的 socket，通过它来接收来自 Web 服务器的连接。
+
+FastCGI 进程在其正在监听的 socket 上收到一个连接之后，进程执行简单的协
+议来接收和发送数据。协议服务于两个目的。首先，协议在多个独立的 FastCGI
+请求间多路复用单个传输线路。这可支持能够利用事件驱动或多线程编程技术处
+理并发请求的应用。第二，在每个请求内部，协议在每个方向上提供 若干独立
+的数据流。这种方式，例如，stdout 和 stderr 数据通过从应用到 Web 服务器的
+单个传输线路传递，而不是像 CGI/1.1 那样需要独立的管道。
+
+一个 FastCGI 应用扮演几个明确定义的角色中的一个。最常用的是响应器
+（Responder）角色，其中应用接收所有与 HTTP 请求相关的信息，并产生一个
+HTTP 响应；那是 CGI/1.1 程序扮演的角色。第二个角色是认证器（Authorizer），
+其中应用接收所有与 HTTP 请求相关的信息，并产生一个认可/未经认可的判定。
+第三个角色是过滤器（Filter），其中应用接收所有与 HTTP 请求相关的信息，以及额外的来自存储在 Web 服务器上的文件的数据流，并产生"已过滤"版的数据
+流作为 HTTP 响应。框架是易扩展的，因而以后可定义更多的 FastCGI。
+
+在本规范的其余部分，只要不致引起混淆，术语"FastCGI 应用"、"应用进程"或
+"应用服务器"简写为"应用"。
+
+
+2. 初始进程状态
+-------------
+
+#####2.1 参数表
+
+Web 服务器缺省创建一个含有单个元素的参数表，该元素是应用的名字，用作可
+执行路径名的最后一部分。Web 服务器可提供某种方式来指定不同的应用名，或
+更详细的参数表。
+
+> 注意，被 Web 服务器执行的文件可能是解释程序文件（以字符#!开头的文本文
+件），此情形中的应用参数表的构造在 execve man 页中描述。
+
+#####2.2 文件描述符
+
+当应用开始执行时，Web 服务器留下一个打开的文件描述符，
+**FCGI_LISTENSOCK_FILENO**。该描述符引用 Web 服务器创建的一个正在监听的
+socket。
+
+
+**FCGI_LISTENSOCK_FILENO** 等于 **STDIN_FILENO**。当应用开始执行时，标准的描述
+符 STDOUT_FILENO 和 STDERR_FILENO 被关闭。一个用于应用确定它是用 CGI 调用
+的还是用 FastCGI 调用的可靠方法是调用
+getpeername(FCGI_LISTENSOCK_FILENO)，对于 FastCGI 应用，它返回-1，并设
+置 errno 为 ENOTCONN。
+
+Web 服务器对于可靠传输的选择，Unix 流式管道（AF_UNIX）或 TCP/IP（AF_INET），
+是内含于 FCGI_LISTENSOCK_FILENO socket 的内部状态中的。
+
+#####2.3 环境变量
+
+Web 服务器可用环境变量向应用传参数。本规范定义了一个这样的变量，
+FCGI_WEB_SERVER_ADDRS；我们期望随着规范的发展定义更多。Web 服务器可提
+供某种方式绑定其他环境变量，例如 PATH 变量。
+
+#####2.4 其他状态
+
+Web 服务器可提供某种方式指定应用的初始进程状态的其他组件，例如进程的优
+先级、用户 ID、组 ID、根目录和工作目录。3. 协议基础
+
+3. Protocol Basics
+------------------
+
+#####3.1 符号（Notation）
+
+我们用 C 语言符号来定义协议消息格式。所有的结构元素按照 unsigned char
+类型定义和排列，这样 ISO C 编译器以明确的方式将它们展开，不带填充。结构
+中定义的第一字节第一个被传送，第二字节排第二个，依次类推。
+
+我们用两个约定来简化我们的定义。
+
+首先，当两个相邻的结构组件除了后缀“B1”和“B0”之外命名相同时，它表示
+这两个组件可视为估值为 B1<<8 + B0 的单个数字。该单个数字的名字是这些组
+件减去后缀的名字。这个约定归纳了一个由超过两个字节表示的数字的处理方
+式。
+
+第二，我们扩展 C 结构（struct）来允许形式
+
+``` c 
+struct {
+    unsigned char mumbleLengthB1;
+    unsigned char mumbleLengthB0;
+    ... /* 其他东西 */
+    unsigned char mumbleData[mumbleLength];
+};
+
+```
+表示一个变长结构，此处组件的长度由较早的一个或多个组件指示的值确定。
+
+#####3.2 接受传输线路
+FastCGI 应用在文件描述符 FCGI_LISTENSOCK_FILENO 引用的 socket 上调用
+accept()来接收新的传输线路。如果 accept()成功，而且也绑定了
+FCGI_WEB_SERVER_ADDRS 环境变量，则应用立刻执行下列特殊处理：
+
+> **FCGI_WEB_SERVER_ADDRS**：值是一列有效的用于 Web 服务器的 IP 地址。
+如果绑定了 FCGI_WEB_SERVER_ADDRS，应用校验新线路的同级 IP 地址
+是否列表中的成员。如果校验失败（包括线路不是用 TCP/IP 传输的可
+能性），应用关闭线路作为响应。
+FCGI_WEB_SERVER_ADDRS 被表示成逗号分隔的 IP 地址列表。每个 IP 地
+址写成四个由小数点分隔的在区间[0..255]中的十进制数。所以该变量
+的一个合法绑定是
+FCGI_WEB_SERVER_ADDRS=199.170.183.28,199.170.183.71。
+
+
+应用可接受若干个并行传输线路，但不是必须的。
+
+
+#####3.3 记录
+
+应用利用简单的协议执行来自 Web 服务器的请求。协议细节依赖应用的角色，但
+是大致说来，Web 服务器首先发送参数和其他数据到应用，然后应用发送结果数
+据到 Web 服务器，最后应用向 Web 服务器发送一个请求完成的指示。
+
+通过传输线路流动的所有数据在 FastCGI 记录中运载。FastCGI 记录实现两件事。
+首先，记录在多个独立的 FastCGI 请求间多路复用传输线路。该多路复用技术支
+持能够利用事件驱动或多线程编程技术处理并发请求的应用。第二，在单个请求
+内部，记录在每个方向上提供若干独立的数据流。这种方式，例如，stdout 和
+stderr 数据能通过从应用到 Web 服务器的单个传输线路传递，而不需要独立的
+管道。
+
+``` c
+typedef struct {
+    unsigned char version;
+    unsigned char type;
+    unsigned char requestIdB1;
+    unsigned char requestIdB0;
+    unsigned char contentLengthB1;
+    unsigned char contentLengthB0;
+    unsigned char paddingLength;
+    unsigned char reserved;
+    unsigned char contentData[contentLength];
+    unsigned char paddingData[paddingLength];
+} FCGI_Record;
+```
+
+FastCGI 记录由一个定长前缀后跟可变数量的内容和填充字节组成。记录包含七
+个组件：
+
+>
+- version: 标识 FastCGI 协议版本。本规范评述（document）
+FCGI_VERSION_1。
+- type:     标识 FastCGI 记录类型，也就是记录执行的一般职能。特定记录类
+型和它们的功能在后面部分详细说明。
+- requestId: 标识记录所属的 FastCGI 请求。
+- contentLength: 记录的 contentData 组件的字节数。
+- paddingLength: 记录的 paddingData 组件的字节数。
+- contentData: 在 0 和 65535 字节之间的数据，依据记录类型进行解释。
+- paddingData: 在 0 和 255 字节之间的数据，被忽略。
+
+我们用不严格的 C 结构初始化语法来指定常量 FastCGI 记录。我们省略 version
+组件，忽略填充（Padding），并且把 requestId 视为数字。因而
+
+>{FCGI_END_REQUEST, 1, {FCGI_REQUEST_COMPLETE,0}}
+
+是个 type ==FCGI_END_REQUEST、requestId == 1 且 contentData ==
+{FCGI_REQUEST_COMPLETE,0}的记录。
+
+######填充（Padding)
+
+协议允许发送者填充它们发送的记录，并且要求接受者解释 paddingLength 并跳
+过 paddingData。填充允许发送者为更有效地处理保持对齐的数据。X 窗口系统
+协议上的经验显示了这种对齐方式的性能优势。
+我们建议记录被放置在八字节倍数的边界上。FCGI_Record 的定长部分是八字
+节。
+
+######管理请求 ID(Managing Request IDs)
+
+Web 服务器重用 FastCGI 请求 ID；应用明了给定传输线路上的每个请求 ID 的当
+前状态。当应用收到一个记录{FCGI_BEGIN_REQUEST, R, ...}时，请求 ID R
+变成有效的，而且当应用向 Web 服务器发送记录{FCGI_END_REQUEST, R, ...}
+时变成无效的。
+
+当请求 ID R 无效时，应用会忽略 requestId == R 的记录，除了刚才描述的
+FCGI_BEGIN_REQUEST 记录。
+
+Web 服务器尝试保持小的 FastCGI 请求 ID。那种方式下应用能利用短数组而不是
+长数组或哈希表来明了请求 ID 的状态。应用也有每次接受一个请求的选项。这
+种情形下，应用只是针对当前的请求 ID 检查输入的 requestId 值。
+
+**记录类型的类型**
+
+有两种有用的分别 FastCGI 记录类型的方式。
+>
+1. 第一个区别在管理（management）记录和应用（application）记录之间。管理
+记录包含不特定于任何 Web 服务器请求的信息，例如关于应用的协议容量的信
+息。应用记录包含关于特定请求的信息，由 requestId 组件标识。
+管理记录有 0 值的 requestId，也称为 null 请求 ID。应用记录有非 0 的
+requestId。
+>
+2. 第二个区别在离散和连续记录之间。一个离散记录包含一个自己的所有数据的有
+意义的单元。一个流记录是 stream 的部分，也就是一连串流类型的 0 或更多非
+空记录（length != 0），后跟一个流类型的空记录（length == 0）。当连接流
+记录的多个 contentData 组件时，形成一个字节序列；该字节序列是流的值。因
+此流的值独立于它包含多少个记录或它的字节如何在非空记录间分配。
+这两种分类是独立的。在本版的 FastCGI 协议定义的记录类型中，所有管理记录
+类型也是离散记录类型，而且几乎所有应用记录类型都是流记录类型。但是三种
+应用记录类型是离散的，而且没有什么能防止在某些以后的协议版本中定义一个
+流式的管理记录类型。
+
+#####3.4 名-值对
+
+FastCGI 应用的很多角色需要读写可变数量的可变长度的值。所以为编码名-值
+对提供标准格式很有用。
+FastCGI 以名字长度，后跟值的长度，后跟名字，后跟值的形式传送名-值对。
+127 字节或更少的长度能在一字节中编码，而更长的长度总是在四字节中编码：
+
+``` c
+ typedef struct {
+     unsigned char nameLengthB0; /* nameLengthB0 >> 7 == 0 */
+     unsigned char valueLengthB0; /* valueLengthB0 >> 7 == 0 */
+     unsigned char nameData[nameLength];
+     unsigned char valueData[valueLength];
+ } FCGI_NameValuePair11;
+
+ typedef struct {
+     unsigned char nameLengthB0; /* nameLengthB0 >> 7 == 0 */
+     unsigned char valueLengthB3; /* valueLengthB3 >> 7 == 1 */
+     unsigned char valueLengthB2;
+     unsigned char valueLengthB1;
+     unsigned char valueLengthB0;
+     unsigned char nameData[nameLength];
+     unsigned char valueData[valueLength
+     ((B3 & 0x7f) << 24) + (B2 << 16) + (B1 << 8) + B0];
+ } FCGI_NameValuePair14;
+ 
+ typedef struct {
+     unsigned char nameLengthB3; /* nameLengthB3 >> 7 == 1 */
+     unsigned char nameLengthB2;
+     unsigned char nameLengthB1;
+     unsigned char nameLengthB0;
+     unsigned char valueLengthB0; /* valueLengthB0 >> 7 == 0 */
+     unsigned char nameData[nameLength
+     ((B3 & 0x7f) << 24) + (B2 << 16) + (B1 << 8) + B0];
+     unsigned char valueData[valueLength];
+ } FCGI_NameValuePair41;
+ 
+ typedef struct {
+     unsigned char nameLengthB3; /* nameLengthB3 >> 7 == 1 */
+     unsigned char nameLengthB2;
+     unsigned char nameLengthB1;
+     unsigned char nameLengthB0;
+     unsigned char valueLengthB3; /* valueLengthB3 >> 7 == 1 */
+     unsigned char valueLengthB2;
+     unsigned char valueLengthB1; unsigned char valueLengthB0;
+     unsigned char nameData[nameLength
+     ((B3 & 0x7f) << 24) + (B2 << 16) + (B1 << 8) + B0];
+     unsigned char valueData[valueLength
+     ((B3 & 0x7f) << 24) + (B2 << 16) + (B1 << 8) + B0];
+ } FCGI_NameValuePair44;
+
+```
+
+长度的第一字节的高位指示长度的编码方式。高位为 0 意味着一个字节的编码方
+式，1 意味着四字节的编码方式。
+名-值对格式允许发送者不用额外的编码方式就能传输二进制值，并且允许接收
+者立刻分配正确数量的内存，即使对于巨大的值。
+
+#####3.5 关闭传输线路
+
+Web 服务器控制传输线路的生存期。当没有活动的请求时 Web 服务器能关闭线路。
+或者 Web 服务器也能把关闭的职权委托给应用（见 FCGI_BEGIN_REQUEST）。该
+情形下，应用在指定的请求结束时关闭线路。
+这种灵活性提供了多种应用风格。简单的应用会一次处理一个请求，并且为每个
+请求接受一个新的传输线路。更复杂的应用会通过一个或多个传输线路处理并发
+的请求，而且会长期保持传输线路为打开状态。
+简单的应用通过在写入响应结束后关闭传输线路可得到重大的性能提升。Web 服
+务器需要控制常驻线路的生命期。
+当应用关闭一个线路或发现一个线路关闭了，它就初始化一个新线路。
+
+4. 管理（Management）记录类型
+-----
+
+#####4.1 FCGI_GET_VALUES, FCGI_GET_VALUES_RESULT
+
+Web 服务器能查询应用内部的具体的变量。典型地，服务器会在应用启动上执行
+查询以使系统配置的某些方面自动化。
+应用把收到的查询作为记录{FCGI_GET_VALUES, 0, ...}。FCGI_GET_VALUES 记
+录的 contentData 部分包含一系列值为空的名-值对。
+应用通过发送补充了值的{FCGI_GET_VALUES_RESULT, 0, ...}记录来响应。如果
+应用不理解查询中包含的一个变量名，它从响应中忽略那个名字。
+FCGI_GET_VALUES 被设计为允许可扩充的变量集。初始集提供信息来帮助服务器
+执行应用和线路的管理：
+ FCGI_MAX_CONNS：该应用将接受的并发传输线路的最大值，例如"1"或"10"。
+ FCGI_MAX_REQS：该应用将接受的并发请求的最大值，例如"1"或"50"。
+ FCGI_MPXS_CONNS：如果应用不多路复用线路（也就是通过每个线路处理
+并发请求）则为 "0"，其他则为"1"。
+应用可在任何时候收到 FCGI_GET_VALUES 记录。除了 FastCGI 库，应用的响应不
+能涉及应用固有的库。
+4.2 FCGI_UNKNOWN_TYPE
+在本协议的未来版本中，管理记录类型集可能会增长。为了这种演变作准备，协
+议包含 FCGI_UNKNOWN_TYPE 管理记录。当应用收到无法理解的类型为 T 的管理记
+录时，它用{FCGI_UNKNOWN_TYPE, 0, {T}}响应。
+FCGI_UNKNOWN_TYPE 记录的 contentData 组件具有形式：
+ typedef struct {
+ unsigned char type;
+ unsigned char reserved[7];
+ } FCGI_UnknownTypeBody;
+type 组件是无法识别的管理记录的类型。
+
+5. 应用（Application）记录类型
+------
+#####5.1 FCGI_BEGIN_REQUEST
+Web 服务器发送 FCGI_BEGIN_REQUEST 记录开始一个请求。
+FCGI_BEGIN_REQUEST 记录的 contentData 组件具有形式：
+```
+typedef struct {
+    unsigned char roleB1;
+    unsigned char roleB0;
+    unsigned char flags;
+    unsigned char reserved[5];
+} FCGI_BeginRequestBody;
+```
+role 组件设置 Web 服务器期望应用扮演的角色。当前定义的角色有：
+
+- FCGI_RESPONDER
+- FCGI_AUTHORIZER
+- FCGI_FILTER角色在下面的第 6 章中作更详细地描述。
+
+flags 组件包含一个控制线路关闭的位：
+> flags & FCGI_KEEP_CONN：如果为 0，则应用在对本次请求响应后关闭线
+路。如果非 0，应用在对本次请求响应后不会关闭线路；Web 服务器为
+线路保持响应性。
+
+
+#####5.2 名-值对流：FCGI_PARAMS
+
+FCGI_PARAMS
+是流记录类型，用于从 Web 服务器向应用发送名-值对。名-值对被相继地沿着流
+发送，没有特定顺序。
+
+#####5.3 字节流：FCGI_STDIN, FCGI_DATA, FCGI_STDOUT, FCGI_STDERR
+
+FCGI_STDIN
+是流记录类型，用于从 Web 服务器向应用发送任意数据。FCGI_DATA 是另一种流
+记录类型，用于向应用发送额外数据。
+FCGI_STDOUT 和 FCGI_STDERR 都是流记录类型，分别用于从应用向 Web 服务器发
+送任意数据和错误数据。
+
+#####5.4 FCGI_ABORT_REQUEST
+
+Web 服务器发送 FCGI_ABORT_REQUEST 记录来中止请求。收到
+> {FCGI_ABORT_REQUEST, R}
+
+后，应用尽快用
+
+> {FCGI_END_REQUEST, R,{FCGI_REQUEST_COMPLETE, appStatus}}
+
+响应。这是真实的来自应用的响应，而不是来自 FastCGI 库的低级确认。
+当 HTTP 客户端关闭了它的传输线路，可是受客户端委托的 FastCGI 请求仍在运
+行时，Web 服务器中止该 FastCGI 请求。这种情况看似不太可能； 多数 FastCGI
+请求具有很短的响应时间，同时如果客户端很慢则 Web 服务器提供输出缓冲。但
+是 FastCGI 应用与其他系统的通信或执行服务器端进栈可能被延期。
+
+当不是通过一个传输线路多路复用请求时，Web 服务器能通过关闭请求的传输线
+路来中止请求。但使用多路复用请求时，关闭传输线路具有不幸的结果，中止线
+路上的所有请求。
+
+#####5.5 FCGI_END_REQUEST
+
+不论已经处理了请求，还是已经拒绝了请求，应用发送 FCGI_END_REQUEST 记录
+来终止请求。FCGI_END_REQUEST 记录的 contentData 组件具有形式：
+
+```
+typedef struct {
+    unsigned char appStatusB3;
+    unsigned char appStatusB2;
+    unsigned char appStatusB1;
+    unsigned char appStatusB0;
+    unsigned char protocolStatus;
+    unsigned char reserved[3];
+} FCGI_EndRequestBody;
+```
+
+appStatus 组件是应用级别的状态码。每种角色说明其 appStatus 的用法。
+protocolStatus 组件是协议级别的状态码；可能的 protocolStatus 值是：
+
+- FCGI_REQUEST_COMPLETE：请求的正常结束。
+- FCGI_CANT_MPX_CONN：拒绝新请求。这发生在 Web 服务器通过一条线路向
+应用发送并发的请求时，后者被设计为每条线路每次处理一个请求。
+- FCGI_OVERLOADED：拒绝新请求。这发生在应用用完某些资源时，例如数
+据库连接。
+- FCGI_UNKNOWN_ROLE：拒绝新请求。这发生在 Web 服务器指定了一个应用
+不能识别的角色时。
+
+6. 角色
+-----
+
+#####6.1 角色协议
+
+角色协议只包括带应用记录类型的记录。它们本质上利用流传输所有数据。
+为了让协议可靠以及简化应用编程，角色协议被设计使用近似顺序编组（nearly
+sequential marshalling）。在严格顺序编组的协议中，应用接收其第一个输入，
+然后是第二个，依次类推。直到收到全部。同样地，应用发送其第一个输出，然
+后是第二个，依次类推。直到发出全部。输入不是相互交叉的，输出也不是。
+对于某些 FastCGI 角色，顺序编组规则有太多限制，因为 CGI 程序能不受时限地
+（timing restriction）写入 stdout 和 stderr。所以用到了 FCGI_STDOUT 和
+FCGI_STDERR 的角色协议允许交叉这两个流。
+
+所有角色协议使用 FCGI_STDERR 流的方式恰是 stderr 在传统的应用编程中的使
+用方式：以易理解的方式报告应用级错误。FCGI_STDERR 流的使用总是可选的。
+如果没有错误要报告，应用要么不发送 FCGI_STDERR 记录，要么发送一个 0 长度
+的 FCGI_STDERR 记录。
+
+当角色协议要求传输不同于 FCGI_STDERR 的流时，总是至少传输一个流类型的记录，即使流是空的。
+再次关注可靠的协议和简化的应用编程技术，角色协议被设计为近似请求-响应。
+在真正的请求-响应协议中，应用在发送其输出记录前接收其所有的输入记录。
+请求-响应协议不允许流水线技术（pipelining）。
+
+对于某些 FastCGI 角色，请求响应规则约束太强；毕竟，CGI 程序不限于在开始
+写 stdout 前读取全部 stdin。所以某些角色协议允许特定的可能性。首先，除
+了结尾的流输入，应用接收其所有输入。当开始接收结尾的流输入时，应用开始
+写其输出。
+
+当角色协议用 FCGI_PARAMS 传输文本值时，例如 CGI 程序从环境变量得到的值，
+其长度不包括结尾的 null 字节，而且它本身不包含 null 字节。需要提供
+environ(7)格式的名-值对的应用必须在名和值间插入等号，并在值后添加 null
+字节。
+角色协议不支持 CGI 的未解析的（non-parsed）报头特性。FastCGI 应用使用 CGI
+报头 Status 和 Location 设置响应状态。
+
+#####6.2 响应器（Responder）
+
+作为响应器的 FastCGI 应用具有同 CGI/1.1 一样的目的：它接收与 HTTP 请求关
+联的所有信息并产生 HTTP 响应。
+它足以解释怎样用响应器模拟 CGI/1.1 的每个元素：
+
+1. 响应器应用通过 FCGI_PARAMS 接收来自 Web 服务器的 CGI/1.1 环境变量。
+2. 接下来响应器应用通过 FCGI_STDIN 接收来自 Web 服务器的
+CGI/1.1 stdin 数据。在收到流尾指示前，应用从该流接收最多
+CONTENT_LENGTH 字节。（只当 HTTP 客户端未能提供时，例如因为客户
+端崩溃了，应用才收到少于 CONTENT_LENGTH 的字节。）
+3. 响应器应用通过 FCGI_STDOUT 向 Web 服务器发送 CGI/1.1 stdout 数据，
+以及通过 FCGI_STDERR 发送 CGI/1.1 stderr 数据。应用同时发送这些，
+而非一个接一个。在开始写 FCGI_STDOUT 和 FCGI_STDERR 前，应用必须
+等待读取 FCGI_PARAMS 完成，但是不需要在开始写这两个流前完成从
+FCGI_STDIN 读取。
+4. 在发送其所有 stdout 和 stderr 数据后，响应器应用发送
+FCGI_END_REQUEST 记录。应用设置 protocolStatus 组件为
+FCGI_REQUEST_COMPLETE，并设置 appStatus 组件为 CGI 程序通过 exit
+系统调用返回的状态码。响应器执行更新，例如实现 POST 方法，应该比较在 FCGI_STDIN 上收到的字节数和 CONTENT_LENGTH，并且如果两数不等则中止更新。
+
+#####6.3 认证器（Authorizer）
+
+作为认证器的 FastCGI 应用接收所有与 HTTP 请求相关的信息，并产生一个认可/
+未经认可的判定。对于认可的判定，认证器也能把名-值对同 HTTP 请求相关联；
+当给出未经认可的判定时，认证器向 HTTP 客户端发送结束响应。
+由于 CGI/1.1 定义了与 HTTP 请求相关联的信息的极好的表示方式，认证器使用
+同样的表示法：
+认证器应用在 FCGI_PARAMS 流上接收来自 Web 服务器的 HTTP 信息，格式
+同响应器一样。Web 服务器不会发送报头 CONTENT_LENGTH、PATH_INFO、
+PATH_TRANSLATED 和 SCRIPT_NAME。
+- 认证器应用以同响应器一样的方式发送 stdout 和 stderr 数据。CGI/1.1
+响应状态指定对结果的处理。如果应用发送状态 200（OK），Web 服务
+器允许访问。 依赖于其配置，Web 服务器可继续进行其他的访问检查，
+包括对其他认证器的请求。
+认证器应用的 200 响应可包含以 Variable-为名字前缀的报头。这些报
+头从应用向 Web 服务器传送名-值对。例如，响应报头
+ Variable-AUTH_METHOD: database lookup
+传输名为 AUTH-METHOD 的值"database lookup"。服务器把这样的名-
+值对同 HTTP 请求相关联，并且把它们包含在后续的 CGI 或 FastCGI 请
+求中，这些请求在处理 HTTP 请求的过程中执行。当应用给出 200 响应
+时，服务器忽略名字不以 Variable-为前缀的响应报头，并且忽略任何
+响应内容。
+对于“200”（OK）以外的认证器响应状态值，Web 服务器拒绝访问并
+将响应状态、报头和内容发回 HTTP 客户端。
+
+#####6.4 过滤器（Filter）
+
+作为过滤器的 FastCGI 应用接收所有与 HTTP 请求相关联的信息，以及额外的来
+自存储在 Web 服务器上的文件的数据流，并产生数据流的“已过滤”版本作为
+HTTP 响应。
+过滤器在功能上类似响应器，接受一个数据文件作为参数。区别是，过滤器使得
+数据文件和过滤器本身都能用 Web 服务器的访问控制机制进行访问控制，而响应
+器接受数据文件名作为参数，必须在数据文件上执行自己的访问控制检查。
+过滤器采取的步骤与响应器的相似。服务器首先提供环境变量，然后是标准输入
+（常规形式的 POST 数据），最后是数据文件输入：
+- 如同响应器，过滤器应用通过 FCGI_PARAMS 接收来自 Web 服务器的名-值对。过滤器应用接收两个过滤器特定的变量：FCGI_DATA_LAST_MOD 和
+FCGI_DATA_LENGTH。
+- 接下来，过滤器应用通过 FCGI_STDIN 接收来自 Web 服务器的
+CGI/1.1 stdin 数据。在收到流尾指示以前，应用从该流接收最多
+CONTENT_LENGTH 字节。（只有 HTTP 客户端未能提供时，应用收到的才
+少于 CONTENT_LENGTH 字节，例如因为客户端崩溃了。）
+- 下一步，过滤器应用通过 FCGI_DATA 接收来自 Web 服务器的文件数据。该
+文件的最后修改时间（表示成自 UTC 1970 年 1 月 1 日以来的整秒数）
+是 FCGI_DATA_LAST_MOD；应用可能查阅该变量并从缓存作出响应，而
+不读取文件数据。在收到流尾指示以前，应用从该流接收最多
+FCGI_DATA_LENGTH 字节。
+- 过滤器应用通过 FCGI_STDOUT 向 Web 服务器发送 CGI/1.1 stdout 数据，
+以及通过 FCGI_STDERR 的 CGI/1.1 stderr 数据。应用同时发送这些，
+而非相继地。在开始写入 FCGI_STDOUT 和 FCGI_STDERR 以前，应用必须
+等待读取 FCGI_STDIN 完成，但是不需要在开始写入这两个流以前完成
+从 FCGI_DATA 的读取。
+- 在发送其所有的 stdout 和 stderr 数据之后，应用发送 FCGI_END_REQUEST
+记录。应用设定 protocolStatus 组件为 FCGI_REQUEST_COMPLETE，以
+及 appStatus 组件为类似的 CGI 程序通过 exit 系统调用返回的状态代
+码。
+过滤器应当把在 FCGI_STDIN 上收到的字节数同 CONTENT_LENGTH 比较，以及把
+FCGI_DATA 上的同 FCGI_DATA_LENGTH 比较。如果数字不匹配且过滤器是个查询，
+过滤器响应应当提供数据丢失的指示。如果数字不匹配且过滤器是个更新，过滤
+器应当中止更新。
+
+7. 错误
+-------
+FastCGI 应用以 0 状态退出来指出它故意结束了，例如，为了执行原始形式的垃
+圾收集。FastCGI 应用以非 0 状态退出被假定为崩溃了。以 0 或非 0 状态退出的
+Web 服务器或其他的应用管理器如何响应应用超出了本规范的范围。
+Web 服务器能通过向 FastCGI 应用发送 SIGTERM 来要求它退出。如果应用忽略
+SIGTERM，Web 服务器能采用 SIGKILL。
+FastCGI 应用使用 FCGI_STDERR 流和 FCGI_END_REQUEST 记录的 appStatus 组件
+报告应用级别错误。在很多情形中，错误会通过 FCGI_STDOUT 流直接报告给用户。
+在 Unix 上，应用向 syslog 报告低级错误，包括 FastCGI 协议错误和 FastCGI
+环境变量中的语法错误。依赖于错误的严重性，应用可能继续或以非 0 状态退出。
+
+
+8. 类型和常量 /*
+------
+
+``` c
+/*
+ * 正在监听的 socket 文件编号
+ */
+#define FCGI_LISTENSOCK_FILENO 0
+
+typedef struct {
+unsigned char version;
+unsigned char type;
+unsigned char requestIdB1;
+unsigned char requestIdB0;
+unsigned char contentLengthB1;
+unsigned char contentLengthB0;
+unsigned char paddingLength;
+unsigned char reserved;
+} FCGI_Header;
+/*
+* FCGI_Header 中的字节数。协议的未来版本不会减少该数。
+*/
+#define FCGI_HEADER_LEN 8
+/*
+* 可用于 FCGI_Header 的 version 组件的值
+*/
+#define FCGI_VERSION_1 1
+/*
+* 可用于 FCGI_Header 的 type 组件的值
+*/
+#define FCGI_BEGIN_REQUEST 1
+#define FCGI_ABORT_REQUEST 2
+#define FCGI_END_REQUEST 3
+#define FCGI_PARAMS 4
+#define FCGI_STDIN 5
+#define FCGI_STDOUT 6
+#define FCGI_STDERR 7
+#define FCGI_DATA 8
+#define FCGI_GET_VALUES 9
+#define FCGI_GET_VALUES_RESULT 10
+#define FCGI_UNKNOWN_TYPE 11
+#define FCGI_MAXTYPE (FCGI_UNKNOWN_TYPE)
+/*
+* 可用于 FCGI_Header 的 requestId 组件的值
+*/
+#define FCGI_NULL_REQUEST_ID 0
+typedef struct { unsigned char roleB1;
+ unsigned char roleB0;
+ unsigned char flags;
+ unsigned char reserved[5];
+} FCGI_BeginRequestBody;
+typedef struct {
+ FCGI_Header header;
+ FCGI_BeginRequestBody body;
+} FCGI_BeginRequestRecord;
+/*
+* 可用于 FCGI_BeginRequestBody 的 flags 组件的掩码
+*/
+#define FCGI_KEEP_CONN 1
+/*
+* 可用于 FCGI_BeginRequestBody 的 role 组件的值
+*/
+#define FCGI_RESPONDER 1
+#define FCGI_AUTHORIZER 2
+#define FCGI_FILTER 3
+typedef struct {
+ unsigned char appStatusB3;
+ unsigned char appStatusB2;
+ unsigned char appStatusB1;
+ unsigned char appStatusB0;
+ unsigned char protocolStatus;
+ unsigned char reserved[3];
+} FCGI_EndRequestBody;
+typedef struct {
+ FCGI_Header header;
+ FCGI_EndRequestBody body;
+} FCGI_EndRequestRecord;
+/*
+* 可用于 FCGI_EndRequestBody 的 protocolStatus 组件的值
+*/
+#define FCGI_REQUEST_COMPLETE 0
+#define FCGI_CANT_MPX_CONN 1
+#define FCGI_OVERLOADED 2
+#define FCGI_UNKNOWN_ROLE 3
+/*
+* 可用于 FCGI_GET_VALUES/FCGI_GET_VALUES_RESULT 记录的变量名
+*/#define FCGI_MAX_CONNS "FCGI_MAX_CONNS"
+#define FCGI_MAX_REQS "FCGI_MAX_REQS"
+#define FCGI_MPXS_CONNS "FCGI_MPXS_CONNS"
+typedef struct {
+ unsigned char type;
+ unsigned char reserved[7];
+} FCGI_UnknownTypeBody;
+typedef struct {
+ FCGI_Header header;
+ FCGI_UnknownTypeBody body;
+} FCGI_UnknownTypeRecord;
+
+```
+9. 参考
+National Center for Supercomputer Applications, The Common Gateway
+Interface, version CGI/1.1.
+D.R.T. Robinson, The WWW Common Gateway Interface Version 1.1,
+Internet-Draft, 15 February 1996.
+
+A. 表：记录类型的属性
+下面的图表列出了所有记录类型，并指出各自的这些属性：
+- WS->App：该类型的记录只能由 Web 服务器发送到应用。其他类型的记录
+只能由应用发送到 Web 服务器。
+- management：该类型的记录含有非特定于某个 Web 服务器请求的信息，而
+且使用 null 请求 ID。其他类型的记录含有请求特定的信息，而且不能
+使用 null 请求 ID。
+- stream：该类型的记录组成一个由带有空 contentData 的记录结束的流。
+其他类型的记录是离散的；各自携带一个有意义的数据单元。
+ 
+WS->App management stream
+ FCGI_GET_VALUES x x
+ FCGI_GET_VALUES_RESULT x
+ FCGI_UNKNOWN_TYPE x
+ FCGI_BEGIN_REQUEST x
+ FCGI_ABORT_REQUEST x
+ FCGI_END_REQUEST FCGI_PARAMS x x
+ FCGI_STDIN x x
+ FCGI_DATA x x
+ FCGI_STDOUT x
+ FCGI_STDERR x
+
+B. 典型的协议消息流程
+用于示例的补充符号约定：
+ 流记录的 contentData（FCGI_PARAMS、FCGI_STDIN、FCGI_STDOUT 和
+FCGI_STDERR）被描述成一个字符串。以" ... "结束的字符串是太长而
+无法显示的，所以只显示前缀。
+ 发送到 Web 服务器的消息相对于收自 Web 服务器的消息缩进排版。
+ 消息以应用经历的时间顺序显示。
+
+1. 在 stdin 上不带数据的简单请求，以及成功的响应：
+```
+{FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, 0}}
+{FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+{FCGI_PARAMS, 1, ""}
+{FCGI_STDIN, 1, ""}
+    
+    {FCGI_STDOUT, 1, "Content-type: text/html\r\n\r\n<html>\n<head> ... "}
+    {FCGI_STDOUT, 1, ""}
+    {FCGI_END_REQUEST, 1, {0, FCGI_REQUEST_COMPLETE}}
+```
+2. 类似例 1，但这次在 stdin 有数据。Web 服务器选择用比之前更多的
+FCGI_PARAMS 记录发送参数：
+
+```
+{FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, 0}}
+{FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SER"}
+{FCGI_PARAMS, 1, "VER_ADDR199.170.183.42 ... "}
+{FCGI_PARAMS, 1, ""}
+{FCGI_STDIN, 1, "quantity=100&item=3047936"}
+{FCGI_STDIN, 1, ""}
+    {FCGI_STDOUT, 1, "Content-type: text/html\r\n\r\n<html>\n<head> ... "}
+    {FCGI_STDOUT, 1, ""}
+    {FCGI_END_REQUEST, 1, {0, FCGI_REQUEST_COMPLETE}}
+
+```
+
+3. 类似例 1，但这次应用发现了错误。应用把一条消息记录到 stderr，向客户
+端返回一个页面，并且向 Web 服务器返回非 0 退出状态。应用选择用更多
+FCGI_STDOUT 记录发送页面：
+```
+{FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, 0}}
+{FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+{FCGI_PARAMS, 1, ""}
+{FCGI_STDIN, 1, ""}
+    {FCGI_STDOUT, 1, "Content-type: text/html\r\n\r\n<ht"}
+    {FCGI_STDERR, 1, "config error: missing SI_UID\n"}
+    {FCGI_STDOUT, 1, "ml>\n<head> ... "}
+    {FCGI_STDOUT, 1, ""}
+    {FCGI_STDERR, 1, ""}
+    {FCGI_END_REQUEST, 1, {938, FCGI_REQUEST_COMPLETE}}
+```
+4. 在单条线路上多路复用的两个例 1 实例。第一个请求比第二个难，所以应用
+颠倒次序完成这些请求：
+
+```
+{FCGI_BEGIN_REQUEST, 1, {FCGI_RESPONDER, FCGI_KEEP_CONN}}
+{FCGI_PARAMS, 1, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+{FCGI_PARAMS, 1, ""}
+{FCGI_BEGIN_REQUEST, 2, {FCGI_RESPONDER, FCGI_KEEP_CONN}}
+{FCGI_PARAMS, 2, "\013\002SERVER_PORT80\013\016SERVER_ADDR199.170.183.42 ... "}
+{FCGI_STDIN, 1, ""}
+    {FCGI_STDOUT, 1, "Content-type: text/html\r\n\r\n"}
+{FCGI_PARAMS, 2, ""}
+{FCGI_STDIN, 2, ""}
+    {FCGI_STDOUT, 2, "Content-type:
+text/html\r\n\r\n<html>\n<head> ... "}
+    {FCGI_STDOUT, 2, ""}
+    {FCGI_END_REQUEST, 2, {0, FCGI_REQUEST_COMPLETE}}
+    {FCGI_STDOUT, 1, "<html>\n<head> ... "}
+    {FCGI_STDOUT, 1, ""}
+    {FCGI_END_REQUEST, 1, {0, FCGI_REQUEST_COMPLETE}}
+
+```

@@ -1,0 +1,30 @@
+---
+layout: post
+title: " strcoll"
+date: 2015-03-02 12:35:03 +0800
+comments: true
+categories: linux c
+---
+
+###strcoll
+
+
+####函数简介
+说明：
+默认情况下(LC_COLLATE为"POSIX"或"C")和strcmp一样根据ASCII比较字符串大小。
+对于设置了LC_COLLATE语言环境的情况下，则根据LC_COLLATE设置的语言排序方式进行比较。例如：汉字，根据拼音进行比较。
+
+####函数实例
+
+请参考strcmp的实例.用法和函数声明都一样.
+
+###php
+
+php 在实现alphasort时用到了此函数，代码如下
+
+``` C
+PHPAPI int php_alphasort(const struct dirent **a, const struct dirent **b)
+{
+    return strcoll((*a)->d_name,(*b)->d_name);
+}
+```

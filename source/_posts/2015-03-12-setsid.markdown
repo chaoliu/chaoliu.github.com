@@ -1,0 +1,21 @@
+---
+layout: post
+title: " linux setsid"
+date: 2014-03-12 14:24:55 +0800
+comments: true
+categories: linux
+---
+
+当进程是会话的领头进程时setsid()调用失败并返回（-1）。setsid()调用成功后，返回新的会话的ID，调用setsid函数的进程成为新的会话的领头进程，并与其父进程的会话组和进程组脱离。由于会话对控制终端的独占性，进程同时与控制终端脱离。
+
+``` c
+pid_t pid = fork();     //fork a process
+if (pid < 0) exit(0);   //fork error
+if (pid > 0) exit(0);   //father process exit
+setsid();               //creat a new session for a process
+```
+>
+之前parent和child运行在同一个session里,parent是会话（session）的领头进程,
+parent进程作为会话的领头进程，如果exit结束执行的话，那么子进程会成为孤儿进程，并被init收养。
+执行setsid()之后,child将重新获得一个新的会话(session)id。
+这时parent退出之后,将不会影响到child了。

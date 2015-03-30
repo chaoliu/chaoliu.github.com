@@ -5,14 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ssh Config - A true master is an eternal student.</title>
+  <title>Linux Setsid - A true master is an eternal student.</title>
   <meta name="author" content="ChaoLiu">
 
   
-  <meta name="description" content="1
+  <meta name="description" content="当进程是会话的领头进程时setsid()调用失败并返回（-1）。setsid()调用成功后，返回新的会话的ID，调用setsid函数的进程成为新的会话的领头进程，并与其父进程的会话组和进程组脱离。由于会话对控制终端的独占性，进程同时与控制终端脱离。 1
 2
 3
-Host work HostName osys11.you.com User chaoliu ">
+4
+pid_t pid = fork &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +22,7 @@ Host work HostName osys11.you.com User chaoliu ">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/02/27/ssh-config/">
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2014/03/12/setsid/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
@@ -66,7 +67,7 @@ Host work HostName osys11.you.com User chaoliu ">
   
   <header>
     
-      <h1 class="entry-title">Ssh Config</h1>
+      <h1 class="entry-title">Linux Setsid</h1>
     
     
       <p class="meta">
@@ -75,7 +76,7 @@ Host work HostName osys11.you.com User chaoliu ">
 
 
 
-<time class='entry-date' datetime='2015-02-27T15:17:46+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:17 pm</span></time>
+<time class='entry-date' datetime='2014-03-12T14:24:55+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:24 pm</span></time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://chaoliu.github.io">Comments</a>
@@ -85,14 +86,23 @@ Host work HostName osys11.you.com User chaoliu ">
   </header>
 
 
-<div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="entry-content"><p>当进程是会话的领头进程时setsid()调用失败并返回（-1）。setsid()调用成功后，返回新的会话的ID，调用setsid函数的进程成为新的会话的领头进程，并与其父进程的会话组和进程组脱离。由于会话对控制终端的独占性，进程同时与控制终端脱离。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host work
-</span><span class='line'>    HostName osys11.you.com
-</span><span class='line'>    User chaoliu
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>     <span class="c1">//fork a process</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">//fork error</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">//father process exit</span>
+</span><span class='line'><span class="n">setsid</span><span class="p">();</span>               <span class="c1">//creat a new session for a process</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<blockquote><p>之前parent和child运行在同一个session里,parent是会话（session）的领头进程,
+parent进程作为会话的领头进程，如果exit结束执行的话，那么子进程会成为孤儿进程，并被init收养。
+执行setsid()之后,child将重新获得一个新的会话(session)id。
+这时parent退出之后,将不会影响到child了。</p></blockquote>
 </div>
 
 
@@ -108,12 +118,12 @@ Host work HostName osys11.you.com User chaoliu ">
 
 
 
-<time class='entry-date' datetime='2015-02-27T15:17:46+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:17 pm</span></time>
+<time class='entry-date' datetime='2014-03-12T14:24:55+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:24 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/xiao-lu-ti-sheng/'>效率提升</a>
+    <a class='category' href='/blog/categories/linux/'>linux</a>
   
 </span>
 
@@ -122,7 +132,7 @@ Host work HostName osys11.you.com User chaoliu ">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/02/27/ssh-config/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/02/27/ssh-config/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2014/03/12/setsid/" data-via="" data-counturl="http://chaoliu.github.io/blog/2014/03/12/setsid/" >Tweet</a>
   
   
   
@@ -131,10 +141,8 @@ Host work HostName osys11.you.com User chaoliu ">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/02/27/dot-gitconfig/" title="Previous Post: .gitconfig">&laquo; .gitconfig</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/02/27/oh-my-zsh/" title="Next Post: oh-my-zsh">oh-my-zsh &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/03/12/sigbushe-sigsegv/" title="Next Post: SIGBUS和SIGSEGV">SIGBUS和SIGSEGV &raquo;</a>
       
     </p>
   </footer>
@@ -200,8 +208,8 @@ Host work HostName osys11.you.com User chaoliu ">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/02/27/ssh-config/';
-        var disqus_url = 'http://chaoliu.github.io/blog/2015/02/27/ssh-config/';
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2014/03/12/setsid/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2014/03/12/setsid/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -4,7 +4,7 @@
   <title><![CDATA[A true master is an eternal student.]]></title>
   <link href="http://chaoliu.github.io/atom.xml" rel="self"/>
   <link href="http://chaoliu.github.io/"/>
-  <updated>2015-03-05T14:41:36+08:00</updated>
+  <updated>2015-03-30T15:01:14+08:00</updated>
   <id>http://chaoliu.github.io/</id>
   <author>
     <name><![CDATA[ChaoLiu]]></name>
@@ -12,6 +12,629 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[结构体初始化]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/11/jie-gou-ti-chu-shi-hua/"/>
+    <updated>2015-03-11T15:07:57+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/11/jie-gou-ti-chu-shi-hua</id>
+    <content type="html"><![CDATA[<p>在看php fpm 源码时注意到有这样一段代码:</p>
+
+<figure class='code'><figcaption><span>php-src/sapi/fpm/fpm.c</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">fpm_globals_s</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">pid_t</span> <span class="n">parent_pid</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">argc</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">config</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">pid</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">running_children</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">error_log_fd</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">log_level</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">listening_socket</span><span class="p">;</span> <span class="cm">/* for this child */</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">max_requests</span><span class="p">;</span> <span class="cm">/* for this child */</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">is_child</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">test_successful</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">heartbeat</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">run_as_root</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">force_stderr</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">send_config_pipe</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extern</span> <span class="k">struct</span> <span class="n">fpm_globals_s</span> <span class="n">fpm_globals</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">fpm_globals_s</span> <span class="n">fpm_globals</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">parent_pid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">argc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">argv</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">config</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">pid</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">running_children</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">error_log_fd</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">listening_socket</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">max_requests</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">is_child</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">test_successful</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">heartbeat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">run_as_root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">force_stderr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">send_config_pipe</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>结构体有几种初始化方式:</p>
+
+<p>struct a {
+    int b;
+    int c;
+}</p>
+
+<p>有几种初始化方式：</p>
+
+<p>struct a a1 = {
+    .b = 1,
+    .c = 2
+};</p>
+
+<p>或者
+struct a a1 = {
+    b:1,
+    c:2
+}</p>
+
+<p>或者
+struct a a1 = { 1, 2};</p>
+
+<p>内核喜欢用第一种，这种方式称为指定初始化（designated initializer）。使用第一种和第二种时，成员初始化顺序可变。</p>
+
+<p>它源自ISO C99标准。以下我摘录了C Primer Plus第五版中相关章节的内容，从而就可以很好的理解2.6版内核采用这种方式的优势就在于由此初始化不必严格按照定义时的顺序。这带来了极大的灵活性，其更大的益处还有待大家在开发中结合自身的应用慢慢体会。</p>
+
+<p>已知一个结构，定义如下
+struct book {
+    char title[MAXTITL];
+    char author[MAXAUTL];
+    float value;
+};</p>
+
+<p>C99支持结构的指定初始化项目，其语法与数组的指定初始化项目近似。只是，结构的指定初始化项目使用点运算符和成员名（而不是方括号和索引值）来标识具体的元素。例如，只初始化book结构的成员value，可以这样做：
+    struct book surprise = { .value = 10.99 };</p>
+
+<p>可以按照任意的顺序使用指定初始化项目：
+    struct book gift = { .value = 25.99,
+                                    .author = &ldquo;James Broadfool&rdquo;,
+                                    .title = &ldquo;Rue for the Toad&rdquo;};
+正像数组一样，跟在一个指定初始化项目之后的常规初始化项目为跟在指定成员后的成员提供了初始值。另外，对特定成员的最后一次赋值是它实际获得的值。例如，考虑下列声明：
+    struct book gift = { .value = 18.90,
+                                    .author = &ldquo;Philionna pestle&rdquo;,
+                                    0.25};
+    这将把值0.25赋给成员value，因为它在结构声明中紧跟在author成员之后。新的值0.25代替了早先的赋值18.90。
+    有关designated initializer的进一步信息可以参考c99标准的6.7.8节Ininialization。</p>
+
+<p>5.22 特定的初始化
+标准C89需要初始化语句的元素以固定的顺序出现，和被初始化的数组或结构体中的元素顺序一样。</p>
+
+<p>在ISO C99中，你可以按任何顺序给出这些元素，指明它们对应的数组的下标或结构体的成员名，并且GNU C也把这作为C89模式下的一个扩展。这个扩展没有在GNU C++中实现。</p>
+
+<p>为了指定一个数组下标，在元素值的前面写上“[index] =”。比如：</p>
+
+<p>int a[6] = { [4] = 29, [2] = 15 };</p>
+
+<p>相当于：</p>
+
+<p>int a[6] = { 0, 0, 15, 0, 29, 0 };</p>
+
+<p>下标值必须是常量表达式，即使被初始化的数组是自动的。</p>
+
+<p>一个可替代这的语法是在元素值前面写上“.[index]”，没有“=”，但从GCC 2.5开始就不再被使用，但GCC仍然接受。为了把一系列的元素初始化为相同的值，写为“[first &hellip; last] = value”。这是一个GNU扩展。比如：</p>
+
+<p>int widths[] = { [0 &hellip; 9] = 1, [10 &hellip; 99] = 2, [100] = 3 };</p>
+
+<p>如果其中的值有副作用，这个副作用将只发生一次，而不是范围内的每次初始化一次。</p>
+
+<p>注意，数组的长度是指定的最大值加一。</p>
+
+<p>在结构体的初始化语句中，在元素值的前面用“.fieldname = ”指定要初始化的成员名。例如，给定下面的结构体，</p>
+
+<p>struct point { int x, y; };</p>
+
+<p>和下面的初始化，</p>
+
+<p>struct point p = { .y = yvalue, .x = xvalue };</p>
+
+<p>等价于：</p>
+
+<p>struct point p = { xvalue, yvalue };</p>
+
+<p>另一有相同含义的语法是“.fieldname:”，不过从GCC 2.5开始废除了，就像这里所示：</p>
+
+<p>struct point p = { y: yvalue, x: xvalue };</p>
+
+<p>“[index]”或“.fieldname”就是指示符。在初始化共同体时，你也可以使用一个指示符（或不再使用的冒号语法），来指定共同体的哪个元素应该使用。比如：</p>
+
+<p>union foo { int i; double d; };
+            union foo f = { .d = 4 };</p>
+
+<p>将会使用第二个元素把4转换成一个double类型来在共同体存放。相反，把4转换成union foo类型将会把它作为整数i存入共同体，既然它是一个整数。（参考5.24节向共同体类型转换。）</p>
+
+<p>你可以把这种命名元素的技术和连续元素的普通C初始化结合起来。每个没有指示符的初始化元素应用于数组或结构体中的下一个连续的元素。比如，</p>
+
+<p>int a[6] = { [1] = v1, v2, [4] = v4 };</p>
+
+<p>等价于</p>
+
+<p>int a[6] = { 0, v1, v2, 0, v4, 0 };</p>
+
+<p>当下标是字符或者属于enum类型时，标识数组初始化语句的元素特别有用。例如：</p>
+
+<p>int whitespace[256]
+            = { [&lsquo; &rsquo;] = 1, [&lsquo;\t&rsquo;] = 1, [&lsquo;\h&rsquo;] = 1,
+            [&lsquo;\f&rsquo;] = 1, [&lsquo;\n&rsquo;] = 1, [&lsquo;\r&rsquo;] = 1 };</p>
+
+<p>你也可以在“=”前面写上一系列的“.fieldname”和“[index]”指示符来指定一个要初始化的嵌套的子对象；这个列表是相对于和最近的花括号对一致的子对象。比如，用上面的struct point声明：</p>
+
+<p>struct point ptarray[10] = { [2].y = yv2, [2].x = xv2, [0].x = xv0 };</p>
+
+<p>如果同一个成员被初始化多次，它将从最后一次初始化中取值。如果任何这样的覆盖初始化有副作用，副作用发生与否是非指定的。目前，gcc会舍弃它们并产生一个警告。</p>
+
+<p>摘自:  <a href="http://www.kerneltravel.net/newbie/gcc_man.html#5.22">http://www.kerneltravel.net/newbie/gcc_man.html#5.22</a></p>
+
+<p>10、 结构体的初试化</p>
+
+<p>gcc开始采用ANSI C的struct结构体的初始化形式：</p>
+
+<p>static struct some_structure = {</p>
+
+<p>.field1 = value,</p>
+
+<p>.field2 = value,</p>
+
+<p>..</p>
+
+<p>};</p>
+
+<p>老版本：非标准的初试化形式</p>
+
+<p>static struct some_structure = {</p>
+
+<p>field1: value,</p>
+
+<p>field2: value,</p>
+
+<p>..</p>
+
+<p>};</p>
+
+<blockquote></blockquote>
+
+<p>参考:
+1 <a href="http://blog.csdn.net/adaptiver/article/details/7494081">http://blog.csdn.net/adaptiver/article/details/7494081</a>
+2 <a href="http://blog.csdn.net/zhsxcn/archive/2008/02/27/2125211.aspx">http://blog.csdn.net/zhsxcn/archive/2008/02/27/2125211.aspx</a>
+3 <a href="http://hi.baidu.com/hufeifeihu/blog/item/4991b6fb0ea16e136c22eb39.html">http://hi.baidu.com/hufeifeihu/blog/item/4991b6fb0ea16e136c22eb39.html</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sockaddr与sockaddr_in]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/"/>
+    <updated>2015-03-05T15:02:29+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in</id>
+    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">sa_family</span><span class="p">;</span>     <span class="cm">/* address family, AF_xxx */</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">sa_data</span><span class="p">[</span><span class="mi">14</span><span class="p">];</span>             <span class="cm">/* 14 bytes of protocol address */</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sa_family是地址家族，一般都是“AF_xxx”的形式。好像通常大多用的是都是AF_INET。
+sa_data是14字节协议地址。
+此数据结构用做bind、connect、recvfrom、sendto等函数的参数，指明地址信息。
+但一般编程中并不直接针对此数据结构操作，而是使用另一个与sockaddr等价的数据结构sockaddr_in。</p>
+
+<!-- more -->
+
+
+<figure class='code'><figcaption><span>netinet/in.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="kt">int</span> <span class="n">sin_family</span><span class="p">;</span>              <span class="cm">/* Address family */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">sin_port</span><span class="p">;</span>       <span class="cm">/* Port number */</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">in_addr</span> <span class="n">sin_addr</span><span class="p">;</span>           <span class="cm">/* Internet address */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">sin_zero</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>         <span class="cm">/* Same size as struct sockaddr */</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">in_addr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">s_addr</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">in_addr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">union</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">struct</span><span class="p">{</span>
+</span><span class='line'>            <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">s_b1</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b2</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b3</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b4</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="n">S_un_b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">struct</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">s_w1</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_w2</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="n">S_un_w</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">S_addr</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="n">S_un</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="n">IN_ADDR</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sin_family指代协议族，在socket编程中只能是AF_INET
+sin_port存储端口号（使用网络字节顺序）
+sin_addr存储IP地址，使用in_addr这个数据结构
+sin_zero是为了让sockaddr与sockaddr_in两个数据结构保持大小相同而保留的空字节。
+s_addr按照网络字节顺序存储IP地址
+sockaddr_in和sockaddr是并列的结构，指向sockaddr_in的结构体的指针也可以指向
+sockadd的结构体，并代替它。也就是说，你可以使用sockaddr_in建立你所需要的信息,
+在最后用进行类型转换就可以了</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">server_addr</span><span class="p">;</span>
+</span><span class='line'><span class="n">bzero</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">server_addr</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">server_addr</span><span class="p">));</span><span class="c1">//初始化</span>
+</span><span class='line'><span class="n">server_addr</span><span class="p">.</span><span class="n">sa_family</span> <span class="o">=</span> <span class="n">AF_INET</span><span class="p">;</span>
+</span><span class='line'><span class="n">server_addr</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span> <span class="o">=</span> <span class="n">inet_addr</span><span class="p">(</span><span class="s">&quot;192.168.0.1&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">……</span>
+</span><span class='line'><span class="err">等到要做转换的时候用：</span>
+</span><span class='line'><span class="err">（</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="err">）</span> <span class="n">server_addr</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>sockaddr_un结构体</h3>
+
+<blockquote><p>sockaddr_un
+Unix socket address record.
+Declaration
+Source position: socketsh.inc line 152
+type sockaddr_un = packed record
+   sun_family: sa_family_t;//sa_family_t的类型是WORD,即unsiged short
+Address family
+   sun_path: array [0..107] of Char;
+File name
+end;
+Description
+sockaddr_un is used to store a UNIX socket addres for the Bind, Recv and Send calls.</p></blockquote>
+
+<h3>其他</h3>
+
+<p>一般关心的是如何把网络中的地址转化成字符串的形式。用到的函数可以是
+char * inet_ntoa(struct in_addr in); 以将in_addr类型的IP地址转换为字符串形式IP地址。
+基本步骤是获得网络接口地址pcap_addr中的sockaddr *addr，然后强制类型转化成sockaddr_in。再获得其中的struct  in_addr sin_addr，这个网络字节存储的IP地址，最后调用函数inet_ntoa，完成转换。</p>
+
+<p>常用字节转化函数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">u_long</span> <span class="n">htonl</span><span class="p">(</span><span class="n">u_long</span> <span class="n">hostlong</span><span class="p">)</span><span class="err">：将主机字节序转换为</span><span class="n">TCP</span><span class="o">/</span><span class="n">IP</span><span class="err">网络字节序</span><span class="p">.</span>
+</span><span class='line'><span class="n">u_short</span> <span class="n">htons</span><span class="p">(</span><span class="n">u_short</span> <span class="n">hostshort</span><span class="p">)</span><span class="err">：将主机字节序转换为</span><span class="n">TCP</span><span class="o">/</span><span class="n">IP</span><span class="err">网络字节序</span><span class="p">.</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">in</span> <span class="n">inet_addr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cp</span><span class="p">)</span><span class="err">：将一个点分制的</span><span class="n">IP</span><span class="err">地址</span><span class="p">(</span><span class="err">如</span><span class="mf">192.168.0.1</span><span class="p">)</span><span class="err">转换为网络二进制数字</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">inet_aton</span><span class="p">(</span><span class="n">cont</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">in_addr</span> <span class="o">*</span><span class="n">inp</span><span class="p">)</span><span class="err">：将网络地址转为网络二进制数字，与</span><span class="n">inet_addr</span><span class="err">的区别是，结果不是作为返回值，而是保存形参</span><span class="n">inp</span><span class="err">所指的</span><span class="n">in_addr</span><span class="err">结构体中</span>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="k">struct</span> <span class="n">in_addr</span> <span class="n">in</span><span class="p">)</span><span class="err">：将网络二进制数字转为网络地址</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unix Domain Socket]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/05/unix-domain-socket/"/>
+    <updated>2015-03-05T14:44:25+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/05/unix-domain-socket</id>
+    <content type="html"><![CDATA[<p>socket API原本是为网络通讯设计的，但后来在socket的框架上发展出一种IPC机制，就是UNIXDomain Socket。虽然网络socket也可用于同一台主机的进程间通讯（通过loopback地址127.0.0.1），但是UNIX Domain Socket用于IPC更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程。这是因为，IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的。UNIX Domain Socket也提供面向流和面向数据包两种API接口，类似于TCP和UDP，但是面向消息的UNIX Domain Socket也是可靠的，消息既不会丢失也不会顺序错乱。</p>
+
+<!-- more -->
+
+
+<p>UNIX Domain Socket是全双工的，API接口语义丰富，相比其它IPC机制有明显的优越性，目前已成为使用最广泛的IPC机制，比如X Window服务器和GUI程序之间就是通过UNIX Domain Socket通讯的。</p>
+
+<p>使用UNIX Domain Socket的过程和网络socket十分相似，也要先调用socket()创建一个socket文件描述符，address family指定为AF_UNIX，type可以选择SOCK_DGRAM或SOCK_STREAM，protocol参数仍然指定为0即可。</p>
+
+<p>UNIX Domain Socket与网络socket编程最明显的不同在于地址格式不同，用结构体sockaddr_un**表示，网络编程的socket地址是IP地址加端口号，而UNIX Domain Socket的地址是一个socket类型的文件在文件系统中的路径，这个socket文件由bind()调用创建，如果调用bind()时该文件已存在，则bind()错误返回</p>
+
+<p>服务器端的步骤如下：</p>
+
+<blockquote><ol>
+<li>socket：      建立一个socket</li>
+<li>bind：          将这个socket绑定在某个文件上（AF_UNIX）或某个端口上（AF_INET），我们会分别介绍这两种。</li>
+<li>listen：        开始监听</li>
+<li>accept：      如果监听到客户端连接，则调用accept接收这个连接并同时新建一个socket来和客户进行通信</li>
+<li>read/write：读取或发送数据到客户端</li>
+<li>close：        通信完成后关闭socket</li>
+</ol>
+</blockquote>
+
+<p>客户端的步骤如下：</p>
+
+<blockquote><ol>
+<li>socket：      建立一个socket</li>
+<li>connect：   主动连接服务器端的某个文件（AF_UNIX）或某个端口（AF_INET）</li>
+<li>read/write：如果服务器同意连接（accept），则读取或发送数据到服务器端</li>
+<li>close：        通信完成后关闭socket</li>
+</ol>
+</blockquote>
+
+<figure class='code'><figcaption><span>Makefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="nl">all</span><span class="p">:</span> <span class="n">tcp_client</span><span class="p">.</span><span class="n">c</span> <span class="n">tcp_server</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>    <span class="n">gcc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">o</span> <span class="n">tcp_client</span> <span class="n">tcp_client</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>    <span class="n">gcc</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">o</span> <span class="n">tcp_server</span> <span class="n">tcp_server</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'>
+</span><span class='line'><span class="nl">clean</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">*</span><span class="p">.</span><span class="n">o</span> <span class="n">tcp_client</span> <span class="n">tcp_server</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>tcp_server.c</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cp">#include &lt;sys/types.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;stdio.h&gt;  </span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="cm">/* delete the socket file */</span>
+</span><span class='line'>  <span class="n">unlink</span><span class="p">(</span><span class="s">&quot;server_socket&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* create a socket */</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">server_sockfd</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">server_addr</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">server_addr</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">strcpy</span><span class="p">(</span><span class="n">server_addr</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="s">&quot;server_socket&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* bind with the local file */</span>
+</span><span class='line'>  <span class="n">bind</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">server_addr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">server_addr</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* listen */</span>
+</span><span class='line'>  <span class="n">listen</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">char</span> <span class="n">ch</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">client_sockfd</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">client_addr</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">socklen_t</span> <span class="n">len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">client_addr</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;server waiting:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/* accept a connection */</span>
+</span><span class='line'>    <span class="n">client_sockfd</span> <span class="o">=</span> <span class="n">accept</span><span class="p">(</span><span class="n">server_sockfd</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">client_addr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/* exchange data */</span>
+</span><span class='line'>    <span class="n">read</span><span class="p">(</span><span class="n">client_sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;get char from client: %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ch</span><span class="p">);</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">ch</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">write</span><span class="p">(</span><span class="n">client_sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/* close the socket */</span>
+</span><span class='line'>    <span class="n">close</span><span class="p">(</span><span class="n">client_sockfd</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>tcp_client.c</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cp">#include &lt;sys/types.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;stdio.h&gt;  </span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="cm">/* create a socket */</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">sockfd</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">address</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">address</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">strcpy</span><span class="p">(</span><span class="n">address</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="s">&quot;server_socket&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* connect to the server */</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">address</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">address</span><span class="p">));</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="n">perror</span><span class="p">(</span><span class="s">&quot;connect failed: &quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* exchange data */</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="sc">&#39;A&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">write</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">read</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;get char from server: %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ch</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* close the socket */</span>
+</span><span class='line'>  <span class="n">close</span><span class="p">(</span><span class="n">sockfd</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Zend Buildin Functions]]></title>
@@ -2205,6 +2828,164 @@ FCGI_STDOUT 记录发送页面：</li>
      dst[php_str_len] = '\0';                \
  }
 </code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SIGBUS和SIGSEGV]]></title>
+    <link href="http://chaoliu.github.io/blog/2014/03/12/sigbushe-sigsegv/"/>
+    <updated>2014-03-12T17:50:55+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2014/03/12/sigbushe-sigsegv</id>
+    <content type="html"><![CDATA[<p>SIGBUS和SIGSEGV也许是我们在平时遇到的次数最多的两个内存错误信号。内存问题一直是最令我们头疼的事情，弄清楚两个信号的发生缘由对我们很好的理解程序的运行是大有裨益的。</p>
+
+<p>我们来看两段程序：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//testsigsegv.c</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kt">char</span> <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="mh">0x00001111</span><span class="p">;</span>
+</span><span class='line'>        <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//testsigbus.c</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="o">*</span><span class="n">pi</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="mh">0x00001111</span><span class="p">;</span>
+</span><span class='line'>        <span class="o">*</span><span class="n">pi</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码那么的相似，我们也同样用gcc编译(加上-g选项，便于gdb调试；平台Solaris Sparc)，执行结果也都是dump core。但通过GDB对core进行观察，你会发现细微的不同。</p>
+
+<p>第一个例子出的core原因是：Program terminated with signal 11, Segmentation fault.</p>
+
+<p>第二个例子的core则提示：Program terminated with signal 10, Bus error.</p>
+
+<p>两者有什么不同呢？这两段代码的共同点都是将一个非法地址赋值给指针变量，然后试图写数据到这个地址。</p>
+
+<p>如果要说清楚这个问题，我们就要结合汇编码和一些计算机的体系结构的知识来共同分析了。</p>
+
+<p>先来看testsigsegv.c的汇编码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">main</span><span class="p">:</span>
+</span><span class='line'>        <span class="o">!</span><span class="err">#</span><span class="n">PROLOGUE</span><span class="err">#</span> <span class="mi">0</span>
+</span><span class='line'>        <span class="n">save</span>    <span class="o">%</span><span class="n">sp</span><span class="p">,</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span> <span class="o">%</span><span class="n">sp</span>
+</span><span class='line'>        <span class="o">!</span><span class="err">#</span><span class="n">PROLOGUE</span><span class="err">#</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="n">sethi</span>   <span class="o">%</span><span class="n">hi</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">or</span>      <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="mi">273</span><span class="p">,</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">st</span>      <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="p">[</span><span class="o">%</span><span class="n">fp</span><span class="o">-</span><span class="mi">20</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">ld</span>      <span class="p">[</span><span class="o">%</span><span class="n">fp</span><span class="o">-</span><span class="mi">20</span><span class="p">],</span> <span class="o">%</span><span class="n">i1</span>
+</span><span class='line'>        <span class="n">mov</span>     <span class="mi">17</span><span class="p">,</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">stb</span>     <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="p">[</span><span class="o">%</span><span class="n">i1</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">nop</span>
+</span><span class='line'>        <span class="n">ret</span>
+</span><span class='line'>        <span class="n">restore</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们关注的是这句：stb     %i0, [%i1]
+从计算机底层的执行角度来说，过程是如何的呢？%i0寄存器里存储的是立即数17，我们要将之存储到寄存器%i1的值指向的内存地址。这一过程对于CPU来说其指挥执行的正常过程是：将寄存器%i0中的值送上数据总线，将寄存器%i1的值送到地址总线，然后使能控制总线上的写信号完成这一向内存写1 byte数据的过程。</p>
+
+<p>我们再看testsigbus.c的汇编码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="nl">main</span><span class="p">:</span>
+</span><span class='line'>        <span class="o">!</span><span class="err">#</span><span class="n">PROLOGUE</span><span class="err">#</span> <span class="mi">0</span>
+</span><span class='line'>        <span class="n">save</span>    <span class="o">%</span><span class="n">sp</span><span class="p">,</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span> <span class="o">%</span><span class="n">sp</span>
+</span><span class='line'>        <span class="o">!</span><span class="err">#</span><span class="n">PROLOGUE</span><span class="err">#</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="n">sethi</span>   <span class="o">%</span><span class="n">hi</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">or</span>      <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="mi">273</span><span class="p">,</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">st</span>      <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="p">[</span><span class="o">%</span><span class="n">fp</span><span class="o">-</span><span class="mi">20</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">ld</span>      <span class="p">[</span><span class="o">%</span><span class="n">fp</span><span class="o">-</span><span class="mi">20</span><span class="p">],</span> <span class="o">%</span><span class="n">i1</span>
+</span><span class='line'>        <span class="n">mov</span>     <span class="mi">17</span><span class="p">,</span> <span class="o">%</span><span class="n">i0</span>
+</span><span class='line'>        <span class="n">st</span>      <span class="o">%</span><span class="n">i0</span><span class="p">,</span> <span class="p">[</span><span class="o">%</span><span class="n">i1</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">nop</span>
+</span><span class='line'>        <span class="n">ret</span>
+</span><span class='line'>        <span class="n">restore</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样最后一句：st      %i0, [%i1]，CPU执行的过程与testsigsegv.c中的一致(只是要存储数据长度是4字节)，那为什么产生错误的原因不同呢？一个是SIGSEGV，而另一个是SIGBUS。这里涉及到的就是对内存地址的校验的问题了，包括对内存地址是否对齐的校验以及该内存地址是否合法的校验。</p>
+
+<p>我们假设如果首先进行的内存地址是否合法的校验(是否归属于用户进程的地址空间)，那么我们回顾一下，这两个程序中的地址0x00001111显然都不合法，按照这种流程，两个程序都应该是SIGSEGV导致的core才对，但是事实并非如此。那难道是先校验内存地址的对齐？我们再看这种思路是否合理？</p>
+
+<p>testsigsegv.c中，0x00001111这个地址值被赋给了char <em>pc；也就是告诉CPU通过这个地址我们要存取一个字节的值，对于一个字节长度的数据，无所谓对齐，所以该地址通过对齐校验；并被放到地址总线上了。而在testsigbus.c里，0x00001111这个地址值被赋给了int </em>pi；也就是告诉CPU通过这个地址我们要存取一个起码4个字节的值，那么对于长度4个字节的对象，其存放地址起码要被4整除才可以，而0x00001111这个值显然不能满足要求，也就不能通过内存对齐的校验。也就是说SIGBUS这个信号在地址被放到地址总线之后被检查出来的不符合对齐的错误；而SIGSEGV则是在地址已经放到地址总线上后，由后续流程中的某个设施检查出来的内存违法访问错误。</p>
+
+<p>一般我们平时遇到SIGBUS时总是因为地址未对齐导致的，而SIGSEGV则是由于内存地址不合法造成的。
+1) SIGBUS(Bus error)意味着指针所对应的地址是有效地址，但总线不能正常使用该指针。通常是未对齐的数据访问所致。
+2) SIGSEGV(Segment fault)意味着指针所对应的地址是无效地址，没有物理内存对应该地址。
+ Linux的mmap(2)手册页
+使用映射可能涉及到如下信号
+SIGSEGV    试图对只读映射区域进行写操作
+SIGBUS     试图访问一块无文件内容对应的内存区域，比如超过文件尾的内存区域，或者以前有文件内容对应，现在为另一进程截断过的内存区域。</p>
+
+<p>调试方法：
+gcc -g 编译
+ulimit -c 20000
+之后运行程序，等core dump
+最后gdb -c core <exec file></p>
+
+<blockquote><p>转载: <a href="http://bigwhite.blogbus.com/logs/12296535.html">http://bigwhite.blogbus.com/logs/12296535.html</a></p></blockquote>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux Setsid]]></title>
+    <link href="http://chaoliu.github.io/blog/2014/03/12/setsid/"/>
+    <updated>2014-03-12T14:24:55+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2014/03/12/setsid</id>
+    <content type="html"><![CDATA[<p>当进程是会话的领头进程时setsid()调用失败并返回（-1）。setsid()调用成功后，返回新的会话的ID，调用setsid函数的进程成为新的会话的领头进程，并与其父进程的会话组和进程组脱离。由于会话对控制终端的独占性，进程同时与控制终端脱离。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>     <span class="c1">//fork a process</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">//fork error</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>   <span class="c1">//father process exit</span>
+</span><span class='line'><span class="n">setsid</span><span class="p">();</span>               <span class="c1">//creat a new session for a process</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>之前parent和child运行在同一个session里,parent是会话（session）的领头进程,
+parent进程作为会话的领头进程，如果exit结束执行的话，那么子进程会成为孤儿进程，并被init收养。
+执行setsid()之后,child将重新获得一个新的会话(session)id。
+这时parent退出之后,将不会影响到child了。</p></blockquote>
 ]]></content>
   </entry>
   

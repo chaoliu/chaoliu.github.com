@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://chaoliu.github.io/blog/2015/03/11/jie-gou-ti-chu-shi-hua/</loc>
+    <lastmod>2015-03-11T15:07:57+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/</loc>
+    <lastmod>2015-03-05T15:02:29+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://chaoliu.github.io/blog/2015/03/05/unix-domain-socket/</loc>
+    <lastmod>2015-03-05T14:44:25+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://chaoliu.github.io/blog/2015/03/03/zend-buildin-functions/</loc>
     <lastmod>2015-03-03T19:40:13+08:00</lastmod>
   </url>
@@ -53,11 +65,19 @@
     <lastmod>2015-02-27T13:14:43+08:00</lastmod>
   </url>
   <url>
+    <loc>http://chaoliu.github.io/blog/2014/03/12/sigbushe-sigsegv/</loc>
+    <lastmod>2014-03-12T17:50:55+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://chaoliu.github.io/blog/2014/03/12/setsid/</loc>
+    <lastmod>2014-03-12T14:24:55+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://chaoliu.github.io/blog/archives/</loc>
-    <lastmod>2015-03-05T14:41:36+08:00</lastmod>
+    <lastmod>2015-03-30T15:01:14+08:00</lastmod>
   </url>
   <url>
     <loc>http://chaoliu.github.io/</loc>
-    <lastmod>2015-03-05T14:41:36+08:00</lastmod>
+    <lastmod>2015-03-30T15:01:14+08:00</lastmod>
   </url>
 </urlset>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | A true master is an eternal student.]]></title>
   <link href="http://chaoliu.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://chaoliu.github.io/"/>
-  <updated>2015-03-05T14:41:36+08:00</updated>
+  <updated>2015-03-30T15:01:14+08:00</updated>
   <id>http://chaoliu.github.io/</id>
   <author>
     <name><![CDATA[ChaoLiu]]></name>
@@ -12,6 +12,243 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Sockaddr与sockaddr_in]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/"/>
+    <updated>2015-03-05T15:02:29+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in</id>
+    <content type="html"><![CDATA[<pre><code class="c">struct sockaddr {
+    unsigned short sa_family;     /* address family, AF_xxx */
+    char sa_data[14];             /* 14 bytes of protocol address */
+};
+</code></pre>
+
+<p>sa_family是地址家族，一般都是“AF_xxx”的形式。好像通常大多用的是都是AF_INET。
+sa_data是14字节协议地址。
+此数据结构用做bind、connect、recvfrom、sendto等函数的参数，指明地址信息。
+但一般编程中并不直接针对此数据结构操作，而是使用另一个与sockaddr等价的数据结构sockaddr_in。</p>
+
+<!-- more -->
+
+
+<pre><code class="c netinet/in.h">
+struct sockaddr_in {
+    short int sin_family;              /* Address family */
+    unsigned short int sin_port;       /* Port number */
+    struct in_addr sin_addr;           /* Internet address */
+    unsigned char sin_zero[8];         /* Same size as struct sockaddr */
+};
+
+struct in_addr {
+    unsigned long s_addr;
+};
+
+typedef struct in_addr {
+    union {
+        struct{
+            unsigned char s_b1,
+            s_b2,
+            s_b3,
+            s_b4;
+        } S_un_b;
+
+        struct {
+            unsigned short s_w1,
+            s_w2;
+        } S_un_w;
+
+        unsigned long S_addr;
+    } S_un;
+} IN_ADDR;
+</code></pre>
+
+<p>sin_family指代协议族，在socket编程中只能是AF_INET
+sin_port存储端口号（使用网络字节顺序）
+sin_addr存储IP地址，使用in_addr这个数据结构
+sin_zero是为了让sockaddr与sockaddr_in两个数据结构保持大小相同而保留的空字节。
+s_addr按照网络字节顺序存储IP地址
+sockaddr_in和sockaddr是并列的结构，指向sockaddr_in的结构体的指针也可以指向
+sockadd的结构体，并代替它。也就是说，你可以使用sockaddr_in建立你所需要的信息,
+在最后用进行类型转换就可以了</p>
+
+<pre><code class="c">
+struct sockaddr_in server_addr; 
+bzero((char*)&amp;server_addr,sizeof(server_addr));//初始化
+server_addr.sa_family = AF_INET;
+server_addr.sin_addr.s_addr = inet_addr("192.168.0.1");
+……
+等到要做转换的时候用：
+（struct sockaddr*） server_addr
+</code></pre>
+
+<h3>sockaddr_un结构体</h3>
+
+<blockquote><p>sockaddr_un
+Unix socket address record.
+Declaration
+Source position: socketsh.inc line 152
+type sockaddr_un = packed record
+   sun_family: sa_family_t;//sa_family_t的类型是WORD,即unsiged short
+Address family
+   sun_path: array [0..107] of Char;
+File name
+end;
+Description
+sockaddr_un is used to store a UNIX socket addres for the Bind, Recv and Send calls.</p></blockquote>
+
+<h3>其他</h3>
+
+<p>一般关心的是如何把网络中的地址转化成字符串的形式。用到的函数可以是
+char * inet_ntoa(struct in_addr in); 以将in_addr类型的IP地址转换为字符串形式IP地址。
+基本步骤是获得网络接口地址pcap_addr中的sockaddr *addr，然后强制类型转化成sockaddr_in。再获得其中的struct  in_addr sin_addr，这个网络字节存储的IP地址，最后调用函数inet_ntoa，完成转换。</p>
+
+<p>常用字节转化函数：</p>
+
+<pre><code class="c">u_long htonl(u_long hostlong)：将主机字节序转换为TCP/IP网络字节序.
+u_short htons(u_short hostshort)：将主机字节序转换为TCP/IP网络字节序.
+unsigned long in inet_addr(const char *cp)：将一个点分制的IP地址(如192.168.0.1)转换为网络二进制数字
+int inet_aton(cont char* cp, struct in_addr *inp)：将网络地址转为网络二进制数字，与inet_addr的区别是，结果不是作为返回值，而是保存形参inp所指的in_addr结构体中
+char *inet_ntoa(struct in_addr in)：将网络二进制数字转为网络地址
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unix Domain Socket]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/05/unix-domain-socket/"/>
+    <updated>2015-03-05T14:44:25+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/05/unix-domain-socket</id>
+    <content type="html"><![CDATA[<p>socket API原本是为网络通讯设计的，但后来在socket的框架上发展出一种IPC机制，就是UNIXDomain Socket。虽然网络socket也可用于同一台主机的进程间通讯（通过loopback地址127.0.0.1），但是UNIX Domain Socket用于IPC更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程。这是因为，IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的。UNIX Domain Socket也提供面向流和面向数据包两种API接口，类似于TCP和UDP，但是面向消息的UNIX Domain Socket也是可靠的，消息既不会丢失也不会顺序错乱。</p>
+
+<!-- more -->
+
+
+<p>UNIX Domain Socket是全双工的，API接口语义丰富，相比其它IPC机制有明显的优越性，目前已成为使用最广泛的IPC机制，比如X Window服务器和GUI程序之间就是通过UNIX Domain Socket通讯的。</p>
+
+<p>使用UNIX Domain Socket的过程和网络socket十分相似，也要先调用socket()创建一个socket文件描述符，address family指定为AF_UNIX，type可以选择SOCK_DGRAM或SOCK_STREAM，protocol参数仍然指定为0即可。</p>
+
+<p>UNIX Domain Socket与网络socket编程最明显的不同在于地址格式不同，用结构体sockaddr_un**表示，网络编程的socket地址是IP地址加端口号，而UNIX Domain Socket的地址是一个socket类型的文件在文件系统中的路径，这个socket文件由bind()调用创建，如果调用bind()时该文件已存在，则bind()错误返回</p>
+
+<p>服务器端的步骤如下：</p>
+
+<blockquote><ol>
+<li>socket：      建立一个socket</li>
+<li>bind：          将这个socket绑定在某个文件上（AF_UNIX）或某个端口上（AF_INET），我们会分别介绍这两种。</li>
+<li>listen：        开始监听</li>
+<li>accept：      如果监听到客户端连接，则调用accept接收这个连接并同时新建一个socket来和客户进行通信</li>
+<li>read/write：读取或发送数据到客户端</li>
+<li>close：        通信完成后关闭socket</li>
+</ol>
+</blockquote>
+
+<p>客户端的步骤如下：</p>
+
+<blockquote><ol>
+<li>socket：      建立一个socket</li>
+<li>connect：   主动连接服务器端的某个文件（AF_UNIX）或某个端口（AF_INET）</li>
+<li>read/write：如果服务器同意连接（accept），则读取或发送数据到服务器端</li>
+<li>close：        通信完成后关闭socket</li>
+</ol>
+</blockquote>
+
+<pre><code class="C Makefile">all: tcp_client.c tcp_server.c  
+    gcc -g -Wall -o tcp_client tcp_client.c  
+    gcc -g -Wall -o tcp_server tcp_server.c  
+
+clean:  
+    rm -rf *.o tcp_client tcp_server
+</code></pre>
+
+<pre><code class="C tcp_server.c">
+#include &lt;sys/types.h&gt;  
+#include &lt;sys/socket.h&gt;  
+#include &lt;sys/un.h&gt;  
+#include &lt;unistd.h&gt;  
+#include &lt;stdlib.h&gt;  
+#include &lt;stdio.h&gt;  
+
+int main()  
+{  
+  /* delete the socket file */  
+  unlink("server_socket");  
+
+  /* create a socket */  
+  int server_sockfd = socket(AF_UNIX, SOCK_STREAM, 0);  
+
+  struct sockaddr_un server_addr;  
+  server_addr.sun_family = AF_UNIX;  
+  strcpy(server_addr.sun_path, "server_socket");  
+
+  /* bind with the local file */  
+  bind(server_sockfd, (struct sockaddr *)&amp;server_addr, sizeof(server_addr));  
+
+  /* listen */  
+  listen(server_sockfd, 5);  
+
+  char ch;  
+  int client_sockfd;  
+  struct sockaddr_un client_addr;  
+  socklen_t len = sizeof(client_addr);  
+  while(1)  
+  {  
+    printf("server waiting:\n");  
+
+    /* accept a connection */  
+    client_sockfd = accept(server_sockfd, (struct sockaddr *)&amp;client_addr, &amp;len);  
+
+    /* exchange data */  
+    read(client_sockfd, &amp;ch, 1);  
+    printf("get char from client: %c\n", ch);  
+    ++ch;  
+    write(client_sockfd, &amp;ch, 1);  
+
+    /* close the socket */  
+    close(client_sockfd);  
+  }  
+
+  return 0;  
+}  
+</code></pre>
+
+<pre><code class="C tcp_client.c">#include &lt;sys/types.h&gt;  
+#include &lt;sys/socket.h&gt;  
+#include &lt;sys/un.h&gt;  
+#include &lt;unistd.h&gt;  
+#include &lt;stdlib.h&gt;  
+#include &lt;stdio.h&gt;  
+
+int main()  
+{  
+  /* create a socket */  
+  int sockfd = socket(AF_UNIX, SOCK_STREAM, 0);  
+
+  struct sockaddr_un address;  
+  address.sun_family = AF_UNIX;  
+  strcpy(address.sun_path, "server_socket");  
+
+  /* connect to the server */  
+  int result = connect(sockfd, (struct sockaddr *)&amp;address, sizeof(address));  
+  if(result == -1)  
+  {  
+    perror("connect failed: ");  
+    exit(1);  
+  }  
+
+  /* exchange data */  
+  char ch = 'A';  
+  write(sockfd, &amp;ch, 1);  
+  read(sockfd, &amp;ch, 1);  
+  printf("get char from server: %c\n", ch);  
+
+  /* close the socket */  
+  close(sockfd);  
+
+  return 0;  
+}
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Strcoll]]></title>
@@ -98,6 +335,99 @@ int main()
 <h3>php</h3>
 
 <p>在php中为了保持兼容性，当<code>scandir</code>和<code>alphasort</code>不存在时，将会使用自定义的版本，具体可以参考php-src/main/php_scandir.c</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SIGBUS和SIGSEGV]]></title>
+    <link href="http://chaoliu.github.io/blog/2014/03/12/sigbushe-sigsegv/"/>
+    <updated>2014-03-12T17:50:55+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2014/03/12/sigbushe-sigsegv</id>
+    <content type="html"><![CDATA[<p>SIGBUS和SIGSEGV也许是我们在平时遇到的次数最多的两个内存错误信号。内存问题一直是最令我们头疼的事情，弄清楚两个信号的发生缘由对我们很好的理解程序的运行是大有裨益的。</p>
+
+<p>我们来看两段程序：</p>
+
+<pre><code class="c">//testsigsegv.c
+int main() {
+        char *pc = (char*)0x00001111;
+        *pc = 17;
+}
+
+//testsigbus.c
+int main() {
+        int *pi = (int*)0x00001111;
+        *pi = 17;
+}
+</code></pre>
+
+<p>上面的代码那么的相似，我们也同样用gcc编译(加上-g选项，便于gdb调试；平台Solaris Sparc)，执行结果也都是dump core。但通过GDB对core进行观察，你会发现细微的不同。</p>
+
+<p>第一个例子出的core原因是：Program terminated with signal 11, Segmentation fault.</p>
+
+<p>第二个例子的core则提示：Program terminated with signal 10, Bus error.</p>
+
+<p>两者有什么不同呢？这两段代码的共同点都是将一个非法地址赋值给指针变量，然后试图写数据到这个地址。</p>
+
+<p>如果要说清楚这个问题，我们就要结合汇编码和一些计算机的体系结构的知识来共同分析了。</p>
+
+<p>先来看testsigsegv.c的汇编码：
+<code>
+main:
+        !#PROLOGUE# 0
+        save    %sp, -120, %sp
+        !#PROLOGUE# 1
+        sethi   %hi(4096), %i0
+        or      %i0, 273, %i0
+        st      %i0, [%fp-20]
+        ld      [%fp-20], %i1
+        mov     17, %i0
+        stb     %i0, [%i1]
+        nop
+        ret
+        restore
+</code></p>
+
+<p>我们关注的是这句：stb     %i0, [%i1]
+从计算机底层的执行角度来说，过程是如何的呢？%i0寄存器里存储的是立即数17，我们要将之存储到寄存器%i1的值指向的内存地址。这一过程对于CPU来说其指挥执行的正常过程是：将寄存器%i0中的值送上数据总线，将寄存器%i1的值送到地址总线，然后使能控制总线上的写信号完成这一向内存写1 byte数据的过程。</p>
+
+<p>我们再看testsigbus.c的汇编码：</p>
+
+<pre><code>main:
+        !#PROLOGUE# 0
+        save    %sp, -120, %sp
+        !#PROLOGUE# 1
+        sethi   %hi(4096), %i0
+        or      %i0, 273, %i0
+        st      %i0, [%fp-20]
+        ld      [%fp-20], %i1
+        mov     17, %i0
+        st      %i0, [%i1]
+        nop
+        ret
+        restore
+</code></pre>
+
+<p>同样最后一句：st      %i0, [%i1]，CPU执行的过程与testsigsegv.c中的一致(只是要存储数据长度是4字节)，那为什么产生错误的原因不同呢？一个是SIGSEGV，而另一个是SIGBUS。这里涉及到的就是对内存地址的校验的问题了，包括对内存地址是否对齐的校验以及该内存地址是否合法的校验。</p>
+
+<p>我们假设如果首先进行的内存地址是否合法的校验(是否归属于用户进程的地址空间)，那么我们回顾一下，这两个程序中的地址0x00001111显然都不合法，按照这种流程，两个程序都应该是SIGSEGV导致的core才对，但是事实并非如此。那难道是先校验内存地址的对齐？我们再看这种思路是否合理？</p>
+
+<p>testsigsegv.c中，0x00001111这个地址值被赋给了char <em>pc；也就是告诉CPU通过这个地址我们要存取一个字节的值，对于一个字节长度的数据，无所谓对齐，所以该地址通过对齐校验；并被放到地址总线上了。而在testsigbus.c里，0x00001111这个地址值被赋给了int </em>pi；也就是告诉CPU通过这个地址我们要存取一个起码4个字节的值，那么对于长度4个字节的对象，其存放地址起码要被4整除才可以，而0x00001111这个值显然不能满足要求，也就不能通过内存对齐的校验。也就是说SIGBUS这个信号在地址被放到地址总线之后被检查出来的不符合对齐的错误；而SIGSEGV则是在地址已经放到地址总线上后，由后续流程中的某个设施检查出来的内存违法访问错误。</p>
+
+<p>一般我们平时遇到SIGBUS时总是因为地址未对齐导致的，而SIGSEGV则是由于内存地址不合法造成的。
+1) SIGBUS(Bus error)意味着指针所对应的地址是有效地址，但总线不能正常使用该指针。通常是未对齐的数据访问所致。
+2) SIGSEGV(Segment fault)意味着指针所对应的地址是无效地址，没有物理内存对应该地址。
+ Linux的mmap(2)手册页
+使用映射可能涉及到如下信号
+SIGSEGV    试图对只读映射区域进行写操作
+SIGBUS     试图访问一块无文件内容对应的内存区域，比如超过文件尾的内存区域，或者以前有文件内容对应，现在为另一进程截断过的内存区域。</p>
+
+<p>调试方法：
+gcc -g 编译
+ulimit -c 20000
+之后运行程序，等core dump
+最后gdb -c core <exec file></p>
+
+<blockquote><p>转载: <a href="http://bigwhite.blogbus.com/logs/12296535.html">http://bigwhite.blogbus.com/logs/12296535.html</a></p></blockquote>
 ]]></content>
   </entry>
   

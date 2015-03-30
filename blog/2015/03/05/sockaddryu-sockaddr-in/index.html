@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sockaddr与sockaddr_in - A true master is an eternal student.</title>
+  <meta name="author" content="ChaoLiu">
+
+  
+  <meta name="description" content="1
+2
+3
+4
+struct sockaddr { unsigned short sa_family; /* address family, AF_xxx */ char sa_data[14]; /* 14 bytes of protocol address */
+}; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A true master is an eternal student." type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A true master is an eternal student.</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="chaoliu.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Sockaddr与sockaddr_in</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-05T15:02:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:02 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">sa_family</span><span class="p">;</span>     <span class="cm">/* address family, AF_xxx */</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">sa_data</span><span class="p">[</span><span class="mi">14</span><span class="p">];</span>             <span class="cm">/* 14 bytes of protocol address */</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sa_family是地址家族，一般都是“AF_xxx”的形式。好像通常大多用的是都是AF_INET。
+sa_data是14字节协议地址。
+此数据结构用做bind、connect、recvfrom、sendto等函数的参数，指明地址信息。
+但一般编程中并不直接针对此数据结构操作，而是使用另一个与sockaddr等价的数据结构sockaddr_in。</p>
+
+<!-- more -->
+
+
+<figure class='code'><figcaption><span>netinet/in.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="kt">int</span> <span class="n">sin_family</span><span class="p">;</span>              <span class="cm">/* Address family */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">sin_port</span><span class="p">;</span>       <span class="cm">/* Port number */</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">in_addr</span> <span class="n">sin_addr</span><span class="p">;</span>           <span class="cm">/* Internet address */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">sin_zero</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>         <span class="cm">/* Same size as struct sockaddr */</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">in_addr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">s_addr</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">in_addr</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">union</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">struct</span><span class="p">{</span>
+</span><span class='line'>            <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">s_b1</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b2</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b3</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_b4</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="n">S_un_b</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">struct</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">s_w1</span><span class="p">,</span>
+</span><span class='line'>            <span class="n">s_w2</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="n">S_un_w</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">S_addr</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="n">S_un</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="n">IN_ADDR</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sin_family指代协议族，在socket编程中只能是AF_INET
+sin_port存储端口号（使用网络字节顺序）
+sin_addr存储IP地址，使用in_addr这个数据结构
+sin_zero是为了让sockaddr与sockaddr_in两个数据结构保持大小相同而保留的空字节。
+s_addr按照网络字节顺序存储IP地址
+sockaddr_in和sockaddr是并列的结构，指向sockaddr_in的结构体的指针也可以指向
+sockadd的结构体，并代替它。也就是说，你可以使用sockaddr_in建立你所需要的信息,
+在最后用进行类型转换就可以了</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">server_addr</span><span class="p">;</span>
+</span><span class='line'><span class="n">bzero</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">server_addr</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">server_addr</span><span class="p">));</span><span class="c1">//初始化</span>
+</span><span class='line'><span class="n">server_addr</span><span class="p">.</span><span class="n">sa_family</span> <span class="o">=</span> <span class="n">AF_INET</span><span class="p">;</span>
+</span><span class='line'><span class="n">server_addr</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span> <span class="o">=</span> <span class="n">inet_addr</span><span class="p">(</span><span class="s">&quot;192.168.0.1&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="err">……</span>
+</span><span class='line'><span class="err">等到要做转换的时候用：</span>
+</span><span class='line'><span class="err">（</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="err">）</span> <span class="n">server_addr</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>sockaddr_un结构体</h3>
+
+<blockquote><p>sockaddr_un
+Unix socket address record.
+Declaration
+Source position: socketsh.inc line 152
+type sockaddr_un = packed record
+   sun_family: sa_family_t;//sa_family_t的类型是WORD,即unsiged short
+Address family
+   sun_path: array [0..107] of Char;
+File name
+end;
+Description
+sockaddr_un is used to store a UNIX socket addres for the Bind, Recv and Send calls.</p></blockquote>
+
+<h3>其他</h3>
+
+<p>一般关心的是如何把网络中的地址转化成字符串的形式。用到的函数可以是
+char * inet_ntoa(struct in_addr in); 以将in_addr类型的IP地址转换为字符串形式IP地址。
+基本步骤是获得网络接口地址pcap_addr中的sockaddr *addr，然后强制类型转化成sockaddr_in。再获得其中的struct  in_addr sin_addr，这个网络字节存储的IP地址，最后调用函数inet_ntoa，完成转换。</p>
+
+<p>常用字节转化函数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">u_long</span> <span class="n">htonl</span><span class="p">(</span><span class="n">u_long</span> <span class="n">hostlong</span><span class="p">)</span><span class="err">：将主机字节序转换为</span><span class="n">TCP</span><span class="o">/</span><span class="n">IP</span><span class="err">网络字节序</span><span class="p">.</span>
+</span><span class='line'><span class="n">u_short</span> <span class="n">htons</span><span class="p">(</span><span class="n">u_short</span> <span class="n">hostshort</span><span class="p">)</span><span class="err">：将主机字节序转换为</span><span class="n">TCP</span><span class="o">/</span><span class="n">IP</span><span class="err">网络字节序</span><span class="p">.</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">in</span> <span class="n">inet_addr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cp</span><span class="p">)</span><span class="err">：将一个点分制的</span><span class="n">IP</span><span class="err">地址</span><span class="p">(</span><span class="err">如</span><span class="mf">192.168.0.1</span><span class="p">)</span><span class="err">转换为网络二进制数字</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">inet_aton</span><span class="p">(</span><span class="n">cont</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">in_addr</span> <span class="o">*</span><span class="n">inp</span><span class="p">)</span><span class="err">：将网络地址转为网络二进制数字，与</span><span class="n">inet_addr</span><span class="err">的区别是，结果不是作为返回值，而是保存形参</span><span class="n">inp</span><span class="err">所指的</span><span class="n">in_addr</span><span class="err">结构体中</span>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="k">struct</span> <span class="n">in_addr</span> <span class="n">in</span><span class="p">)</span><span class="err">：将网络二进制数字转为网络地址</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ChaoLiu</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-05T15:02:29+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:02 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/" data-via="" data-counturl="http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/03/05/unix-domain-socket/" title="Previous Post: unix domain socket">&laquo; unix domain socket</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/03/11/jie-gou-ti-chu-shi-hua/" title="Next Post: 结构体初始化">结构体初始化 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/11/jie-gou-ti-chu-shi-hua/">结构体初始化</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/05/sockaddryu-sockaddr-in/">Sockaddr与sockaddr_in</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/05/unix-domain-socket/">Unix Domain Socket</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/zend-buildin-functions/">Zend Buildin Functions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">安装Sublime Text 2插件</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - ChaoLiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'chaoliu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/';
+        var disqus_url = 'http://chaoliu.github.io/blog/2015/03/05/sockaddryu-sockaddr-in/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[A true master is an eternal student.]]></title>
   <link href="http://chaoliu.github.io/atom.xml" rel="self"/>
   <link href="http://chaoliu.github.io/"/>
-  <updated>2015-03-02T15:59:55+08:00</updated>
+  <updated>2015-03-05T14:41:36+08:00</updated>
   <id>http://chaoliu.github.io/</id>
   <author>
     <name><![CDATA[ChaoLiu]]></name>
@@ -12,6 +12,267 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Zend Buildin Functions]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/03/zend-buildin-functions/"/>
+    <updated>2015-03-03T19:40:13+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/03/zend-buildin-functions</id>
+    <content type="html"><![CDATA[<p>头文件</p>
+
+<blockquote><p>zend_buildin_functions.h</p></blockquote>
+
+<p>主要定义了函数</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">zend_startup_builtin_functions</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>具体实现如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">zend_module_entry</span> <span class="n">zend_builtin_module</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">STANDARD_MODULE_HEADER</span><span class="p">,</span>
+</span><span class='line'>    <span class="s">&quot;Core&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">builtin_functions</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">ZEND_MINIT</span><span class="p">(</span><span class="n">core</span><span class="p">),</span>
+</span><span class='line'>    <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="nb">NULL</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">ZEND_VERSION</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">STANDARD_MODULE_PROPERTIES</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">zend_startup_builtin_functions</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">zend_builtin_module</span><span class="p">.</span><span class="n">module_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">zend_builtin_module</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">MODULE_PERSISTENT</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">EG</span><span class="p">(</span><span class="n">current_module</span><span class="p">)</span> <span class="o">=</span> <span class="n">zend_register_module_ex</span><span class="p">(</span><span class="o">&amp;</span><span class="n">zend_builtin_module</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">?</span> <span class="nl">FAILURE</span> <span class="p">:</span> <span class="n">SUCCESS</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这段代码具体指什么，稍后分析</p>
+
+<h3>2 函数定义过程</h3>
+
+<blockquote><p>zend_version();</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">static</span> <span class="nf">ZEND_FUNCTION</span><span class="p">(</span><span class="n">zend_version</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="k">const</span> <span class="n">zend_function_entry</span> <span class="n">builtin_functions</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">ZEND_FE</span><span class="p">(</span><span class="n">zend_version</span><span class="p">,</span>       <span class="n">arginfo_zend__void</span><span class="p">)</span>
+</span><span class='line'>    <span class="err">···</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* proto string zend_version(void)</span>
+</span><span class='line'><span class="cm">   Get the version of the Zend Engine */</span>
+</span><span class='line'><span class="n">ZEND_FUNCTION</span><span class="p">(</span><span class="n">zend_version</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">RETURN_STRINGL</span><span class="p">(</span><span class="n">ZEND_VERSION</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ZEND_VERSION</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ZEND_FUNCTION 在zend_API.h中定义，具体如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#define ZEND_FN(name) zif_##name</span>
+</span><span class='line'><span class="cp">#define ZEND_NAMED_FUNCTION(name)       void name(INTERNAL_FUNCTION_PARAMETERS)</span>
+</span><span class='line'><span class="cp">#define ZEND_FUNCTION(name)             ZEND_NAMED_FUNCTION(ZEND_FN(name))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>INTERNAL_FUNCTION_PARAMETERS是在zend.h中定义的，表示函数的执行参数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#define INTERNAL_FUNCTION_PARAMETERS zend_execute_data *execute_data, zval *return_value</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以ZEND_FUNCTION(zend_version)展开后便是：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="n">zif_zend_version</span><span class="p">(</span><span class="n">zend_execute_data</span> <span class="o">*</span><span class="n">execute_data</span><span class="p">,</span> <span class="n">zval</span> <span class="o">*</span><span class="n">return_value</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3</h3>
+
+<p>zend_register_module_ex</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">ZEND_API</span> <span class="n">zend_module_entry</span><span class="o">*</span> <span class="nf">zend_register_module_ex</span><span class="p">(</span><span class="n">zend_module_entry</span> <span class="o">*</span><span class="n">module</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">size_t</span> <span class="n">name_len</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">zend_string</span> <span class="o">*</span><span class="n">lcname</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">zend_module_entry</span> <span class="o">*</span><span class="n">module_ptr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">module</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/* Check module dependencies */</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">module</span><span class="o">-&gt;</span><span class="n">deps</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">const</span> <span class="n">zend_module_dep</span> <span class="o">*</span><span class="n">dep</span> <span class="o">=</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">deps</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="p">(</span><span class="n">dep</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">dep</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">==</span> <span class="n">MODULE_DEP_CONFLICTS</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">name_len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">dep</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">lcname</span> <span class="o">=</span> <span class="n">zend_string_alloc</span><span class="p">(</span><span class="n">name_len</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">zend_str_tolower_copy</span><span class="p">(</span><span class="n">lcname</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">,</span> <span class="n">dep</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">name_len</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="n">zend_hash_exists</span><span class="p">(</span><span class="o">&amp;</span><span class="n">module_registry</span><span class="p">,</span> <span class="n">lcname</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="n">zend_string_free</span><span class="p">(</span><span class="n">lcname</span><span class="p">);</span>
+</span><span class='line'>                    <span class="cm">/* TODO: Check version relationship */</span>
+</span><span class='line'>                    <span class="n">zend_error</span><span class="p">(</span><span class="n">E_CORE_WARNING</span><span class="p">,</span> <span class="s">&quot;Cannot load module &#39;%s&#39; because conflicting module &#39;%s&#39; is already loaded&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">dep</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'>                    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="n">zend_string_free</span><span class="p">(</span><span class="n">lcname</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="o">++</span><span class="n">dep</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">name_len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">lcname</span> <span class="o">=</span> <span class="n">zend_string_alloc</span><span class="p">(</span><span class="n">name_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">zend_str_tolower_copy</span><span class="p">(</span><span class="n">lcname</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">name_len</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="n">module_ptr</span> <span class="o">=</span> <span class="n">zend_hash_add_mem</span><span class="p">(</span><span class="o">&amp;</span><span class="n">module_registry</span><span class="p">,</span> <span class="n">lcname</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">zend_module_entry</span><span class="p">)))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">zend_error</span><span class="p">(</span><span class="n">E_CORE_WARNING</span><span class="p">,</span> <span class="s">&quot;Module &#39;%s&#39; already loaded&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">zend_string_release</span><span class="p">(</span><span class="n">lcname</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">zend_string_release</span><span class="p">(</span><span class="n">lcname</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">module</span> <span class="o">=</span> <span class="n">module_ptr</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">EG</span><span class="p">(</span><span class="n">current_module</span><span class="p">)</span> <span class="o">=</span> <span class="n">module</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">module</span><span class="o">-&gt;</span><span class="n">functions</span> <span class="o">&amp;&amp;</span> <span class="n">zend_register_functions</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">functions</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">)</span><span class="o">==</span><span class="n">FAILURE</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">EG</span><span class="p">(</span><span class="n">current_module</span><span class="p">)</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">zend_error</span><span class="p">(</span><span class="n">E_CORE_WARNING</span><span class="p">,</span><span class="s">&quot;%s: Unable to register functions, unable to load&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">EG</span><span class="p">(</span><span class="n">current_module</span><span class="p">)</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">module</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[安装Sublime Text 2插件]]></title>
+    <link href="http://chaoliu.github.io/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/"/>
+    <updated>2015-03-03T19:00:31+08:00</updated>
+    <id>http://chaoliu.github.io/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian</id>
+    <content type="html"><![CDATA[<p>按Ctrl+`调出console
+粘贴以下代码到底部命令行并回车：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import urllib2,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read())
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重启Sublime Text 2。
+如果在Perferences->package settings中看到package control这一项，则安装成功。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Php7开发环境]]></title>
@@ -35,7 +296,10 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>$ brew install autoconf                                                                         *[master]</p></blockquote>
+<!-- more -->
+
+
+<blockquote><p>$ brew install autoconf</p></blockquote>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -161,6 +425,9 @@
 <code>/**/</code>
 做大段的注释要防止被注释掉的代码中有嵌套的
 <code>/**/</code>,这会导致注释掉的代码区域不是你想要的范围， 当被注释掉的代码很大时容易出现这种情况，特别是过一段时间后又修改该处代码时更是如此。</p>
+
+<!-- more -->
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

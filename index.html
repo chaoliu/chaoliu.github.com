@@ -9,13 +9,8 @@
   <meta name="author" content="ChaoLiu">
 
   
-  <meta name="description" content="required： 10.10.2 xcode installed $ ./buildconf 1
-2
-3
-4
-5
-buildconf: checking installation...
-buildconf: autoconf not found. You need autoconf &hellip;">
+  <meta name="description" content="头文件 zend_buildin_functions.h 主要定义了函数 1
+int zend_startup_builtin_functions(void); ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +68,97 @@ buildconf: autoconf not found. You need autoconf &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/03/03/zend-buildin-functions/">Zend Buildin Functions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-03T19:40:13+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>7:40 pm</span></time>
+        
+           | <a href="/blog/2015/03/03/zend-buildin-functions/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/03/zend-buildin-functions/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>头文件</p>
+
+<blockquote><p>zend_buildin_functions.h</p></blockquote>
+
+<p>主要定义了函数</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">zend_startup_builtin_functions</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/03/zend-buildin-functions/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">安装Sublime Text 2插件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-03T19:00:31+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>7:00 pm</span></time>
+        
+           | <a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/#disqus_thread"
+             data-disqus-identifier="http://chaoliu.github.io/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>按Ctrl+`调出console
+粘贴以下代码到底部命令行并回车：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import urllib2,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read())
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重启Sublime Text 2。
+如果在Perferences->package settings中看到package control这一项，则安装成功。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a></h1>
     
     
@@ -109,120 +195,12 @@ buildconf: autoconf not found. You need autoconf &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>$ brew install autoconf                                                                         *[master]</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>==&gt; Downloading https://homebrew.bintray.com/bottles/autoconf-2.69.yosemite.bottle.1.tar.gz
-</span><span class='line'>######################################################################## 100.0%
-</span><span class='line'>==&gt; Pouring autoconf-2.69.yosemite.bottle.1.tar.gz
-</span><span class='line'>/usr/local/Cellar/autoconf/2.69: 70 files, 3.1M</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ ./buildconf</p>
-
-<p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>checking for bison... bison -y
-</span><span class='line'>checking for bison version... invalid
-</span><span class='line'>configure: WARNING: This bison version is not supported for regeneration of the Zend/PHP parsers (found: 2.3, min: 204, excluded: ).
-</span><span class='line'>checking for re2c... re2c
-</span><span class='line'>checking for re2c version... 0.13.7.5 (ok)
-</span><span class='line'>configure: error: bison is required to build PHP/Zend when building a GIT checkout!</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ wget <a href="http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz">http://mirror.hust.edu.cn/gnu/bison/bison-3.0.4.tar.gz</a></p>
-
-<p>$ ./configure</p>
-
-<p>$ make &amp;&amp; make install</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>before
-</span><span class='line'>$ bison -V                                                                             
-</span><span class='line'>bison (GNU Bison) 2.3
-</span><span class='line'>Written by Robert Corbett and Richard Stallman.
-</span><span class='line'>
-</span><span class='line'>Copyright (C) 2006 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-</span><span class='line'>
-</span><span class='line'>after
-</span><span class='line'>$ bison -V                                                                                      *[master] 
-</span><span class='line'>bison (GNU Bison) 3.0.4
-</span><span class='line'>Written by Robert Corbett and Richard Stallman.
-</span><span class='line'>
-</span><span class='line'>Copyright (C) 2015 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$ ./configure &ndash;enable-debug &ndash;disable-all</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Thank you for using PHP.
-</span><span class='line'>
-</span><span class='line'>config.status: creating php7.spec
-</span><span class='line'>config.status: creating main/build-defs.h
-</span><span class='line'>config.status: creating scripts/phpize
-</span><span class='line'>config.status: creating scripts/man1/phpize.1
-</span><span class='line'>config.status: creating scripts/php-config
-</span><span class='line'>config.status: creating scripts/man1/php-config.1
-</span><span class='line'>config.status: creating sapi/cli/php.1
-</span><span class='line'>config.status: creating sapi/cgi/php-cgi.1
-</span><span class='line'>config.status: creating main/php_config.h
-</span><span class='line'>config.status: executing default commands
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>$make</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Build complete.
-</span><span class='line'>Don't forget to run 'make test'.
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/02/php7kai-fa-huan-jing/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -259,65 +237,12 @@ buildconf: autoconf not found. You need autoconf &hellip;">
 做大段的注释要防止被注释掉的代码中有嵌套的
 <code>/**/</code>,这会导致注释掉的代码区域不是你想要的范围， 当被注释掉的代码很大时容易出现这种情况，特别是过一段时间后又修改该处代码时更是如此。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#if 1
-</span><span class='line'>###执行
-</span><span class='line'>#endif
-</span><span class='line'>
-</span><span class='line'>#if 0
-</span><span class='line'>###不执行
-</span><span class='line'>#endif 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>编译阶段的注释语句</p>
-
-<h3>php</h3>
-
-<figure class='code'><figcaption><span>php-src/zend/zend_string.h</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="k">static</span> <span class="n">zend_always_inline</span> <span class="n">zend_string</span> <span class="o">*</span><span class="nf">zend_string_alloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">persistent</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">zend_string</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">zend_string</span> <span class="o">*</span><span class="p">)</span><span class="n">pemalloc</span><span class="p">(</span><span class="n">ZEND_MM_ALIGNED_SIZE</span><span class="p">(</span><span class="n">_STR_HEADER_SIZE</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">persistent</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">GC_REFCOUNT</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'><span class="cp">#if 1</span>
-</span><span class='line'>    <span class="cm">/* optimized single assignment */</span>
-</span><span class='line'>    <span class="n">GC_TYPE_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span> <span class="o">|</span> <span class="p">((</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
-</span><span class='line'><span class="cp">#else</span>
-</span><span class='line'>    <span class="n">GC_TYPE</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="n">IS_STRING</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">GC_FLAGS</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">persistent</span> <span class="o">?</span> <span class="nl">IS_STR_PERSISTENT</span> <span class="p">:</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">GC_INFO</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="cp">#endif</span>
-</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">ret</span><span class="o">-&gt;</span><span class="n">len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/02/yu-bian-yi-zhi-ling/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -592,96 +517,6 @@ $Id: fcgi-spec.html,v 1.4 2002/02/25 00:42:59 robs Exp $
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/27/dot-gitconfig/">.gitconfig</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-02-27T15:09:34+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:09 pm</span></time>
-        
-           | <a href="/blog/2015/02/27/dot-gitconfig/#disqus_thread"
-             data-disqus-identifier="http://chaoliu.github.io/blog/2015/02/27/dot-gitconfig/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>color<span class="o">]</span>
-</span><span class='line'>        <span class="nv">ui</span> <span class="o">=</span> auto
-</span><span class='line'><span class="o">[</span>merge<span class="o">]</span>
-</span><span class='line'>        <span class="nv">tool</span> <span class="o">=</span> vimdiff
-</span><span class='line'><span class="o">[</span><span class="nb">alias</span><span class="o">]</span>
-</span><span class='line'>        <span class="nv">st</span> <span class="o">=</span> status
-</span><span class='line'>        <span class="nv">ci</span> <span class="o">=</span> commit
-</span><span class='line'>        <span class="nv">br</span> <span class="o">=</span> branch
-</span><span class='line'>        <span class="nv">co</span> <span class="o">=</span> checkout
-</span><span class='line'>        <span class="nv">df</span> <span class="o">=</span> diff
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/">Octopress个人博客搭建</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-02-27T14:42:47+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:42 pm</span></time>
-        
-           | <a href="/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/#disqus_thread"
-             data-disqus-identifier="http://chaoliu.github.io/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>文章内容主要记录Octopress个人博客搭建过程，部分内容参考自互联网</p></blockquote>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/02/27/octopressge-ren-bo-ke-da-jian/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -697,6 +532,14 @@ $Id: fcgi-spec.html,v 1.4 2002/02/25 00:42:59 robs Exp $
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/03/zend-buildin-functions/">Zend Buildin Functions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/an-zhuang-sublime-text-2cha-jian/">安装Sublime Text 2插件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/02/php7kai-fa-huan-jing/">Php7开发环境</a>
       </li>
     
@@ -706,14 +549,6 @@ $Id: fcgi-spec.html,v 1.4 2002/02/25 00:42:59 robs Exp $
     
       <li class="post">
         <a href="/blog/2015/03/02/strcoll/">Strcoll</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/02/dirent-dot-h/">dirent.h</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/27/socketservermo-kuai/">SocketServer模块</a>
       </li>
     
   </ul>
